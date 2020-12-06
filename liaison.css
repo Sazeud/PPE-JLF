@@ -5,14 +5,14 @@
 
 table{
     margin:auto;
+    margin-top: 20px;
 }
 
 input{
     margin-top:15px;
 }
 
-table,
-td {
+td,th{
     border: 1px solid #333;
 }
 
@@ -30,4 +30,8 @@ th, td{
 h2{
     text-align:center;
     margin-top: 40px;
+}
+
+.sansbordure{
+    border-style:none;
 }

@@ -82,7 +82,7 @@ catch(Exception $e){
           <tbody>
 
           <?php
-          $sql = 'SELECT L.code, P.idPort, idPort_ARRIVEE, DATE_FORMAT(date, \'%d/%m/%Y\') AS date_reorganise, heure FROM liaison as L, traversee as T, port as P WHERE P.nom= :portDep AND P.idPort = L.idPort AND L.code = T.code ORDER BY date_reorganise ,heure LIMIT 5';
+          $sql = 'SELECT L.code, P.idPort, idPort_ARRIVEE, DATE_FORMAT(date, \'%d/%m/%Y\') AS date_reorganise, heure, S.idSecteur FROM liaison as L, traversee as T, port as P, secteur as S WHERE P.nom= :portDep AND P.idPort = L.idPort AND L.code = T.code AND S.idSecteur = L.idSecteur ORDER BY date_reorganise ,heure LIMIT 5';
           $stm = $bdd->prepare($sql);
           $stm->bindParam(":portDep", $_GET['port']);
           $stm->execute();
@@ -110,7 +110,7 @@ catch(Exception $e){
             $PortArr = $donnee[0]["nom"];
             ?>
               <tr>
-                <td><a href="#">L<?php echo htmlspecialchars($codeLiaison); ?></a></td>
+                <td><a href="liaison.php?liaison=<?php echo htmlspecialchars($codeLiaison);?>&<?php echo htmlspecialchars($row['idSecteur']);?>">L<?php echo htmlspecialchars($codeLiaison); ?></a></td>
                 <td><?php echo htmlspecialchars($PortDep); ?></td>
                 <td><?php echo htmlspecialchars($PortArr); ?></td>
                 <td><?php echo $row['date_reorganise']; ?></td>

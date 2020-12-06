@@ -162,17 +162,22 @@
                       $sql = 'SELECT C.capaciteMax FROM contenir as C, bateau as B WHERE C.idBateau = ? AND C.idBateau = B.idBateau ORDER BY C.lettre';
                       $stm = $bdd->prepare($sql);
                       $stm->execute(array($row['idBateau']));
-                      $donnee = $stm->fetchAll();
+                      $donnee = $stm->fetchAll(); ?>
 
+                      <form action="Reservation.php" method="post">
+                      <?php
                       foreach($donnee as $ligne){ ?>
                         <td><?php echo htmlspecialchars($ligne['capaciteMax']);?></td>
                       <?php }
                     ?>
+                    <td class="sansbordure"><input type="radio" id="<?php echo htmlspecialchars($row['numTrav']); ?>" name="reservation" value="<?php echo htmlspecialchars($row['numTrav']); ?>"></td>
                   </tr>
               <?php }
             ?>
             </tbody>
-        </table>
+        </table><br>
+        <center><input type="submit" value="Réserver maintenant"></center>
+        </form>
       </div>
     <?php 
     }
