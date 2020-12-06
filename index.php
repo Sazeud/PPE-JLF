@@ -16,7 +16,7 @@ catch(Exception $e){
 	die('Erreur : ' .$e->getMessage());
 }
 
-//On récupère les 5 prochaines liaisons
+//On récupère les 5 prochaines liaisonssss
 $req = $bdd->query('SELECT code, portdepart, portarrivee FROM liaison,traversee ORDER BY traversee.date DESC LIMIT 0,5');
 ?>
   	<nav class="navbar navbar-expand-lg navbar-light bg-light">
