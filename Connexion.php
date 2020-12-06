@@ -1,3 +1,4 @@
+  
 <!DOCTYPE html>
 <html>
     <head>
@@ -25,7 +26,6 @@
                         if($erreur == 1 || $erreur == 2){
                             echo "<p style='color:red'>Nom d'utilisateur ou Mot de passe incorrecte !</p>";
                         }
-
                     }
                 ?>
             </form>

@@ -16,8 +16,6 @@ catch(Exception $e){
 	die('Erreur : ' .$e->getMessage());
 }
 
-//On récupère les 5 prochaines liaisonssss
-$req = $bdd->query('SELECT code, portdepart, portarrivee FROM liaison,traversee ORDER BY traversee.date DESC LIMIT 0,5');
 ?>
   	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 	  <a class="navbar-brand" href="index.php">MarieTeam</a>
@@ -46,45 +44,90 @@ $req = $bdd->query('SELECT code, portdepart, portarrivee FROM liaison,traversee 
 	<br><br><br><br>
 
 	 <div class="container">
-      <h1>Tableaux des prochaines liaisons</h1>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Code de liaison</th>
-            <th>Départ</th>
-            <th>Arrivée</th>
-          </tr>
-        </thead>
-        <tbody>
-        <?php 
-        	while($donnees = $req->fetch())
-        	{
-        ?>
-          <tr>
-            <td><a href="liaison.php?code=<?php echo $donnees['code']; ?>">L<?php echo htmlspecialchars($donnees['code']); ?></a></td>
-            <td><?php echo htmlspecialchars($donnees['portdepart']); ?></td>
-            <td><?php echo htmlspecialchars($donnees['portarrivee']); ?></td>
-          </tr>
-        <?php
-    		}
-    		$req->closeCursor();
-    	?>
-          <tr>
-            <td><a href="#">L23</a></td>
-            <td>Lorient</td>
-            <td>Port-Tudy</td>
-          </tr>
-          <tr>
-            <td><a href="#">L45</a></td>
-            <td>Vannes</td>
-            <td>Le Palais</td>
-          </tr>
-          <tr>
-          	<td><a href="#">L2</a></td>
-          	<td>Sauzon</td>
-          	<td>Quiberon</td>
-        </tbody>
+      <h1>Tableaux des prochaines traversées</h1>
+      <p>Veuillez entrer un port de départ afin de voir les prochaines traversées disponibles :</p>
+      <form action="index.php" method="GET">
+        <label><b>Liaison :</b></label> 
+        <input type="text" name="port">
+        <input type="submit" id='submit' value='Rechercher'>
+      </form>
+
+      <?php 
+      if(isset($_GET['port'])){
+        $req = $bdd->prepare('SELECT * FROM port WHERE nom = ?');
+        $req->execute(array($_GET['port']));
+        $count = $req->rowCount();
+        if($count != 0){
+          $sql = 'SELECT nom FROM port WHERE nom = :nomPort';
+          $stm = $bdd->prepare($sql);
+          $stm->bindParam(":nomPort",$_GET['port']);
+          $stm->execute();
+          $result = $stm->fetchAll();
+
+          $nom = $result[0]["nom"];
+
+          echo "<br>";
+          echo "<h2>Prochaines liaisons partant de ".htmlspecialchars($nom)."</h2>"; ?>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Code de liaison</th>
+                <th>Départ</th>
+                <th>Arrivée</th>
+                <th>Date Départ</th>
+                <th>Heure Arrivée</th>
+              </tr>
+            </thead>
+          <tbody>
+
+          <?php
+          $sql = 'SELECT L.code, P.idPort, idPort_ARRIVEE, DATE_FORMAT(date, \'%d/%m/%Y\') AS date_reorganise, heure FROM liaison as L, traversee as T, port as P WHERE P.nom= :portDep AND P.idPort = L.idPort AND L.code = T.code ORDER BY date_reorganise ,heure LIMIT 5';
+          $stm = $bdd->prepare($sql);
+          $stm->bindParam(":portDep", $_GET['port']);
+          $stm->execute();
+          $result = $stm->fetchAll();
+
+          foreach($result as $row){
+            $codeLiaison = $row['code'];
+            $idPortDep = $row['idPort'];
+            $idPortArr = $row['idPort_ARRIVEE'];
+
+            $sql = 'SELECT nom FROM port WHERE idPort = :idPortDep';
+            $stm = $bdd->prepare($sql);
+            $stm->bindParam(":idPortDep",$idPortDep);
+            $stm->execute();
+            $donnee = $stm->fetchAll();
+
+            $PortDep = $donnee[0]["nom"];
+
+            $sql = 'SELECT nom FROM port WHERE idPort = :idPortArr';
+            $stm = $bdd->prepare($sql);
+            $stm->bindParam(":idPortArr",$idPortArr);
+            $stm->execute();
+            $donnee = $stm->fetchAll();
+
+            $PortArr = $donnee[0]["nom"];
+            ?>
+              <tr>
+                <td><a href="#">L<?php echo htmlspecialchars($codeLiaison); ?></a></td>
+                <td><?php echo htmlspecialchars($PortDep); ?></td>
+                <td><?php echo htmlspecialchars($PortArr); ?></td>
+                <td><?php echo $row['date_reorganise']; ?></td>
+                <td><?php echo htmlspecialchars($row['heure']); ?></td>
+              </tr>
+            <?php
+          }?>
+          </tbody>
       </table>
     </div>
+    <?php
+        }
+        else if($count == 0){?>
+          <p>Le port que vous avez entré n'existe pas ! Veuillez réessayer</p>
+          <?php
+        }
+      }
+      ?>
   </body> 
 </html>

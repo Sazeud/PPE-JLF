@@ -4,6 +4,10 @@
     margin-top:10%;
 }
 
+body{
+    background-color: #2C75FF;
+}
+
 #container h1{
     width: 38%;
     margin: 0 auto;
