@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Liaison</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap.css">
     <link rel="stylesheet" href="liaison.css">
   </head>
   <body>
@@ -148,16 +148,26 @@
               <td>C<br>Véh.sup.2m</td>
             </tr>
             <?php 
-              $sql = 'SELECT T.numTrav, T.heure, B.nom,  FROM traversee as T, bateau as B WHERE T.code = ? AND T.idBateau = B.idBateau ORDER BY heure';
+              $sql = 'SELECT T.numTrav, T.heure, B.nom, B.idBateau FROM traversee as T, bateau as B WHERE T.code = ? AND T.idBateau = B.idBateau ORDER BY heure';
               $stm = $bdd->prepare($sql);
               $stm->execute(array($_GET['liaison']));
               $result = $stm->fetchAll();
-
+              
               foreach($result as $row){ ?>
                   <tr>
                     <td><?php echo htmlspecialchars($row['numTrav']);?></td>
                     <td><?php echo htmlspecialchars($row['heure']);?></td>
                     <td><?php echo htmlspecialchars($row['nom']);?></td>
+                    <?php 
+                      $sql = 'SELECT C.capaciteMax FROM contenir as C, bateau as B WHERE C.idBateau = ? AND C.idBateau = B.idBateau ORDER BY C.lettre';
+                      $stm = $bdd->prepare($sql);
+                      $stm->execute(array($row['idBateau']));
+                      $donnee = $stm->fetchAll();
+
+                      foreach($donnee as $ligne){ ?>
+                        <td><?php echo htmlspecialchars($ligne['capaciteMax']);?></td>
+                      <?php }
+                    ?>
                   </tr>
               <?php }
             ?>
