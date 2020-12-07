@@ -1,5 +1,6 @@
 <?php
 session_start();
+session_regenerate_id();
 
 if(isset($_POST['username']) && isset($_POST['password'])){
 	try{
@@ -18,7 +19,12 @@ if(isset($_POST['username']) && isset($_POST['password'])){
 		$count = $req->rowCount();
 		if($count != 0){
 			$_SESSION['username'] = $username;
-			header('Location: index.php');
+			if(isset($_SESSION['numTraversee'])){
+				header('Location: reservation.php?reservation='.$_SESSION['numTraversee']);
+			}
+			else{
+				header('Location: index.php');
+			}
 		}
 		else{
 			header('Location: Connexion.php?erreur=1');

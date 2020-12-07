@@ -1,77 +1,121 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Page de traitement</title>
+        <title>Marie Team | Billet</title>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="form.css">
+        <link rel="stylesheet" href="bootstrap.css">
     </head>
+    <?php
+			session_start();
+			session_regenerate_id();
+			//Connexion à la base de donnée
+			try{
+				$bdd = new PDO('mysql:host=localhost;dbname=marieteam;charset=utf8','root','');
+			}
+			catch(Exception $e){
+				die('Erreur : ' .$e->getMessage());
+			}
+	?>
     <body>
-    <div class="billet">       
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.php">MarieTeam</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+            <span class="navbar-text">
+            Page du billet
+            </span>
+            <?php if(!isset($_SESSION['username'])){?>
+            <form class="form-inline my-2 my-lg-0">
+            <a class="nav-link" href="Connexion.php">Connexion/Inscription<span class="sr-only">(current)</span></a>
+            </form>
+            <?php }
+            else if(isset($_SESSION['username'])){?>
+            <form class="form-inline my-2 my-lg-0">
+            <a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
+            <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
+            </form>
+            <?php } ?>
+        </div>
+    </nav>
+    <?php
+        if(isset($_SESSION['username'])){
+    ?>
+    <div class="billet">   
+            <p>Votre réservation : </p>
         <?php
+            $sql = 'SELECT DATE_FORMAT(T.date, \'%d/%m/%Y\') as dateT, T.heure, L.idPort, L.idPort_ARRIVEE, T.date FROM traversee as T, liaison as L WHERE numTrav = ? AND T.code = L.code';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($_SESSION['numTraversee']));
+            $result = $stm->fetchAll();
 
-            
-            echo "Votre Reservation  : ".'<br>';
+            $dateT = $result[0]['dateT'];
+            $heure = $result[0]['heure'];
+            $portDep = $result[0]['idPort'];
+            $portArr = $result[0]['idPort_ARRIVEE'];
+            $date = $result[0]['date'];
 
-            // EN CONSTRUCTION a recuperer de la page liaison 
-            echo "Laison : ".'<br>';
-            echo "Traversée n° : "."le : "."à : ".'<br>'.'<br>';
-            echo "Réservation enregistrer sous le n° : ".'<br>';
+            $sql = 'SELECT nom FROM port WHERE idPort = ?';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($portDep));
+            $result = $stm->fetchAll();
+
+            $nomPortDep = $result[0]['nom'];
+
+            $sql = 'SELECT nom FROM port WHERE idPort = ?';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($portArr));
+            $result = $stm->fetchAll();
+
+            $nomPortArr = $result[0]['nom'];
+
+            echo "Laison : ".$nomPortDep.' - '.$nomPortArr.'<br>';
+            echo "Traversée n° : ".$_SESSION['numTraversee']." le : ".$dateT." à : ".$heure.'<br>'.'<br>';
+            echo "Réservation enregistré sous le n° : ".'<br>';
 
 
             //récupère les données saisies sur la page Reservation
             echo 'Nom : '.$_POST["nom"].'<br>';
             echo 'Adresse : ' .$_POST["adresse"].'<br>';
             echo 'Code Postal : ' .$_POST["cp"].'<br>';
-            echo 'Ville : ' .$_POST["ville"].'<br>'.'<br>';
+            echo 'Ville : ' .$_POST["ville"].'<br>'.'<br>';               
+        ?>
+        <p>Nombres de personnes et véhicules comprient dans votre réservation :</p>
 
-            //Creation des variables prennant les valeurs numériques des input 
-            $nbAdulte = intval($_POST["adulte"]);
-            $nbJunior = intval($_POST["junior"]);
-            $nbEnfant = intval($_POST["enfant"]) ;
-            $nbVoitureLI4 = intval($_POST["voiLongInf4"]) ;
-            $nbVoitureLI5 = intval($_POST["voiLongInf5"]) ;
-            $nbFourgon = intval($_POST["fourgon"]) ;   
-            $nbCampingCar = intval($_POST["campingCar"]) ;    
-            $nbCamion = intval($_POST["camion"]) ;                 
-
-            //Affichage des valeurs saisies uniquement si différent de 0 
-            if ($nbAdulte != 0) {
-            	echo "Adulte  : ".$nbAdulte.'<br>';
+        <?php
+            if($_POST['nAdulte'] != null ){ 
+                echo "Adulte : ".htmlspecialchars($_POST['nAdulte']).'<br>';
             }
-            
-            if ($nbJunior != 0) {
-            	echo "Junior 8 à 18 ans  :".$nbJunior.'<br>';
+            if($_POST['nJunior'] != null){
+                echo "Junior : ".htmlspecialchars($_POST['nJunior']).'<br>';
             }
-
-            
-            if ($nbEnfant != 0) {
-            	echo "Enfant 0 à 7 ans  : ".$nbEnfant.'<br>';
+            if($_POST['nEnfant'] != null){
+                echo "Enfant : ".htmlspecialchars($_POST['nEnfant']).'<br>';
             }
-
-            if ($nbVoitureLI4 != 0) {
-            	echo "Voiture long.inf.4m  : ".$nbVoitureLI4.'<br>';
+            if($_POST['nVoitInf4'] != null){
+                echo "Voiture Inférieur à 4m : ".htmlspecialchars($_POST['nVoitInf4']).'<br>';
             }
-
-
-            if ($nbVoitureLI5 != 0) {
-            	echo "Voiture long.inf.5m  : ".$nbVoitureLI5.'<br>';
+            if($_POST['nVoitInf5'] != null){
+                echo "Voiture Inférieur à 5m : ".htmlspecialchars($_POST['nVoitInf5']);
             }
-
-
-            if ($nbFourgon != 0) {
-            	echo "Fourgon  : ".$nbFourgon.'<br>';
+            if($_POST['nFourgon'] != null){
+                echo "Fourgon : ".htmlspecialchars($_POST['nFourgon']).'<br>';
             }
-
-
-            if ($nbCampingCar != 0) {
-            	echo "Camping car  : ".$nbCampingCar.'<br>';
+            if($_POST['nCampingCar'] != null){
+                echo "CampingCar : ".htmlspecialchars($_POST['nCampingCar']).'<br>';
             }
-
-
-            if ($nbCamion != 0) {
-            	echo "Camion  : ".$nbCamion.'<br>';
+            if($_POST['nCamion'] != null){
+                echo "Camion : ".htmlspecialchars($_POST['nCamion']).'<br>';
             }
         ?>
     </div>
+        <?php } 
+            else{
+                header('Location: reservation.php?reservation='.$_SESSION['numTraversee']);
+            }
+        ?>
     </body>
 </html>

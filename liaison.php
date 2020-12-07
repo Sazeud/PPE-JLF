@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8">
-    <title>Liaison</title>
+    <title>Marie Team | Page de liaison</title>
     <link rel="stylesheet" href="bootstrap.css">
     <link rel="stylesheet" href="liaison.css">
   </head>
@@ -164,7 +164,7 @@
                       $stm->execute(array($row['idBateau']));
                       $donnee = $stm->fetchAll(); ?>
 
-                      <form action="reservation.php" method="post">
+                      <form action="reservation.php" method="get">
                       <?php
                       foreach($donnee as $ligne){ ?>
                         <td><?php echo htmlspecialchars($ligne['capaciteMax']);?></td>

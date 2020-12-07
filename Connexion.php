@@ -6,9 +6,12 @@
        <title>Page de Connexion</title>
         <link rel="stylesheet" href="connexion.css" media="screen" type="text/css" />
     </head>
+    <?php 
+        session_start();
+        session_regenerate_id();
+    ?>
     <body>
         <div id="container">
-            
             <form action="verificationConnexion.php" method="POST">
                 <h1>Connexion</h1>
                 

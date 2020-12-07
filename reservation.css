@@ -34,3 +34,26 @@ input{
 .codepost{
     width:60px;
 }
+
+td,th{
+    border: 1px solid #333;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.reserver{
+    width: 400px;
+    height: 300px;
+    margin:auto;
+}
+
+.b-reserver{
+    width:100px;
+    margin-left:175px;
+    margin-top:15px;
+}
+
+.b-nombre{
+    width:40px;
+    height:20px;
+}
