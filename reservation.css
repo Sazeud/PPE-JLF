@@ -1,0 +1,36 @@
+.reservation{
+    margin-top:150px;
+    height: 700px;
+    width: 450px;
+    border: 3px solid #333;
+    margin-right:auto;
+    margin-left:auto;
+}
+
+.titre{
+    height:50px;
+    margin:auto;
+    background-color: grey;
+}
+
+.titre > h5{
+    padding-top:12px;
+    padding-left:5px;
+    color: white;
+}
+
+.donnees{
+    height:650px;
+}
+
+.donnees > p, .donnees > form > p{
+    margin-left:2px;
+}
+
+input{
+    margin-top : 8px;
+}
+
+.codepost{
+    width:60px;
+}

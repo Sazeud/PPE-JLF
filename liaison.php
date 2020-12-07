@@ -164,7 +164,7 @@
                       $stm->execute(array($row['idBateau']));
                       $donnee = $stm->fetchAll(); ?>
 
-                      <form action="Reservation.php" method="post">
+                      <form action="reservation.php" method="post">
                       <?php
                       foreach($donnee as $ligne){ ?>
                         <td><?php echo htmlspecialchars($ligne['capaciteMax']);?></td>

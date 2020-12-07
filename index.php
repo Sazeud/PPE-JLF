@@ -5,18 +5,18 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   </head> 
   <body> 
-<?php
-session_start();
-session_regenerate_id();
-//Connexion à la base de donnée
-try{
-	$bdd = new PDO('mysql:host=localhost;dbname=marieteam;charset=utf8','root','');
-}
-catch(Exception $e){
-	die('Erreur : ' .$e->getMessage());
-}
+    <?php
+    session_start();
+    session_regenerate_id();
+    //Connexion à la base de donnée
+    try{
+      $bdd = new PDO('mysql:host=localhost;dbname=marieteam;charset=utf8','root','');
+    }
+    catch(Exception $e){
+      die('Erreur : ' .$e->getMessage());
+    }
 
-?>
+    ?>
   	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 	  <a class="navbar-brand" href="index.php">MarieTeam</a>
 	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,9 +35,9 @@ catch(Exception $e){
       <?php }
       else if(isset($_SESSION['username'])){?>
         <form class="form-inline my-2 my-lg-0">
-        <a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
-        <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
-      </form>
+          <a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
+          <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
+        </form>
       <?php } ?>
 	  </div>
 	</nav>
