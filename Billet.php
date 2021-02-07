@@ -26,7 +26,7 @@
             <ul class="navbar-nav mr-auto">
             </ul>
             <span class="navbar-text">
-            Page du billet
+            Page du billet test
             </span>
             <?php if(!isset($_SESSION['username'])){?>
             <form class="form-inline my-2 my-lg-0">
