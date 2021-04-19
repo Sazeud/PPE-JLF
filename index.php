@@ -58,9 +58,9 @@
         $req->execute(array($_GET['port']));
         $count = $req->rowCount();
         if($count != 0){
-          $sql = 'SELECT nom FROM port WHERE nom = :nomPort';
+          $sql = 'SELECT nom FROM port WHERE nom = ?';
           $stm = $bdd->prepare($sql);
-          $stm->bindParam(":nomPort",$_GET['port']);
+          $stm->execute(array($_GET['port']));
           $stm->execute();
           $result = $stm->fetchAll();
 
@@ -82,9 +82,16 @@
           <tbody>
 
           <?php
-          $sql = 'SELECT L.code, P.idPort, idPort_ARRIVEE, DATE_FORMAT(date, \'%d/%m/%Y\') AS date_reorganise, heure, S.idSecteur FROM liaison as L, traversee as T, port as P, secteur as S WHERE P.nom= :portDep AND P.idPort = L.idPort AND L.code = T.code AND S.idSecteur = L.idSecteur ORDER BY date_reorganise ,heure LIMIT 5';
+          $sql = 'SELECT DATE(NOW()) as d';
           $stm = $bdd->prepare($sql);
-          $stm->bindParam(":portDep", $_GET['port']);
+          $stm->execute();
+          $result = $stm->fetchAll();
+
+          $dateActuelle = $result[0]['d'];
+
+          $sql = 'SELECT L.code, P.idPort, idPort_ARRIVEE, DATE_FORMAT(date, \'%d/%m/%Y\') AS date_reorganise, heure, S.idSecteur FROM liaison as L, traversee as T, port as P, secteur as S WHERE P.nom= ? AND P.idPort = L.idPort AND L.code = T.code AND S.idSecteur = L.idSecteur AND date >= ? ORDER BY date_reorganise ,heure LIMIT 5';
+          $stm = $bdd->prepare($sql);
+          $stm->execute(array($_GET['port'],$dateActuelle));
           $stm->execute();
           $result = $stm->fetchAll();
 
@@ -93,17 +100,17 @@
             $idPortDep = $row['idPort'];
             $idPortArr = $row['idPort_ARRIVEE'];
 
-            $sql = 'SELECT nom FROM port WHERE idPort = :idPortDep';
+            $sql = 'SELECT nom FROM port WHERE idPort = ?';
             $stm = $bdd->prepare($sql);
-            $stm->bindParam(":idPortDep",$idPortDep);
+            $stm->execute(array($idPortDep));
             $stm->execute();
             $donnee = $stm->fetchAll();
 
             $PortDep = $donnee[0]["nom"];
 
-            $sql = 'SELECT nom FROM port WHERE idPort = :idPortArr';
+            $sql = 'SELECT nom FROM port WHERE idPort = ?';
             $stm = $bdd->prepare($sql);
-            $stm->bindParam(":idPortArr",$idPortArr);
+            $stm->execute(array($idPortArr));
             $stm->execute();
             $donnee = $stm->fetchAll();
 

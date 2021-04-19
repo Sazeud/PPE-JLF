@@ -42,7 +42,7 @@
         <?php } ?>
       </div>
     </nav>
-    <div class="container">
+    <div class="choix">
       <form method="get" action="liaison.php">
         <select name="secteur">
                 <?php
@@ -55,15 +55,16 @@
                 <?php
                 }
               ?>
-        </select><br>
+        </select><br><br>
         <input type="submit" value="Afficher" />
       </form>
     </div>
     <?php 
       if(isset($_GET['secteur'])){
     ?>
-    <div class ="container">
+    <div class ="choix">
       <form method="get" action="liaison.php">
+        <div class="liaison">
         <select name="liaison">
                 <?php
                 $sql = 'SELECT idSecteur FROM secteur WHERE nom = ?';
@@ -97,7 +98,19 @@
                 <?php
                 }
               ?>
-        </select><br>
+        </select>
+        </div>
+        <?php
+          $sql = 'SELECT DATE(NOW()) as d';
+          $stm = $bdd->prepare($sql);
+          $stm->execute();
+          $result = $stm->fetchAll();
+
+          $dateA = $result[0]['d'];
+        ?>
+        <div class="date">
+          <input name="date" type="date" value="<?php echo $dateA ?>">
+        </div>
         <input type="submit" value="Afficher" />
         <input type="hidden" name="secteur" value="<?php echo htmlspecialchars($_GET['secteur']);?>">
       </form>
@@ -148,9 +161,9 @@
               <td>C<br>Véh.sup.2m</td>
             </tr>
             <?php 
-              $sql = 'SELECT T.numTrav, T.heure, B.nom, B.idBateau FROM traversee as T, bateau as B WHERE T.code = ? AND T.idBateau = B.idBateau ORDER BY heure';
+              $sql = 'SELECT T.numTrav, T.heure, B.nom, B.idBateau FROM traversee as T, bateau as B WHERE T.code = ? AND T.idBateau = B.idBateau AND date = ? ORDER BY heure';
               $stm = $bdd->prepare($sql);
-              $stm->execute(array($_GET['liaison']));
+              $stm->execute(array($_GET['liaison'], $_GET['date']));
               $result = $stm->fetchAll();
               
               foreach($result as $row){ ?>
@@ -170,7 +183,7 @@
                         <td><?php echo htmlspecialchars($ligne['capaciteMax']);?></td>
                       <?php }
                     ?>
-                    <td class="sansbordure"><input type="radio" id="<?php echo htmlspecialchars($row['numTrav']); ?>" name="reservation" value="<?php echo htmlspecialchars($row['numTrav']); ?>"></td>
+                    <td class="sansbordure"><input type="radio" id="<?php echo htmlspecialchars($row['numTrav']); ?>" name="reservation" value="<?php echo htmlspecialchars($row['numTrav']); ?>" required></td>
                   </tr>
               <?php }
             ?>
