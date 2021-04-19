@@ -10,6 +10,7 @@
 			session_start();
 			session_regenerate_id();
 			$_SESSION['numTraversee'] = $_GET['reservation'];
+			$_SESSION['reduction'] = 1;
 			//Connexion à la base de donnée
 			try{
 				$bdd = new PDO('mysql:host=localhost;dbname=marieteam;charset=utf8','root','');
@@ -85,15 +86,15 @@
 						<form action="billet.php" method="post">
 							<p>
 								Nom : 
-								<input type="text" name="nom"><br>
+								<input type="text" name="nom" required><br>
 								Prénom :
-								<input type="text" name="prenom"><br>
+								<input type="text" name="prenom" required><br>
 								Adresse :
-								<input type="text" name="adresse"><br>
+								<input type="text" name="adresse" required><br>
 								Code Postal :
-								<input type="text" name="cp" class="codepost">
+								<input type="text" name="cp" class="codepost" required>
 								Ville :
-								<input type="text" name="ville">
+								<input type="text" name="ville" required>
 							</p>
 
 							<table class="reserver">
@@ -122,45 +123,60 @@
 									<tr>
 										<td>Adulte</td>
 										<td><?php echo htmlspecialchars($result[0]['tarif']); ?></td>
-										<td><input type="number" name="nAdulte" class="b-nombre"></td>
+										<td><input type="number" name="nAdulte" class="b-nombre" min="0" max="100" value = "0"></td>
 									</tr>
 									<tr>
 										<td>Junior 8 à 18 ans</td>
 										<td><?php echo htmlspecialchars($result[1]['tarif']); ?></td>
-										<td><input type="number" name="nJunior" class="b-nombre"></td>
+										<td><input type="number" name="nJunior" class="b-nombre" min="0" max="100" value = "0"></td>
 									</tr>
 									<tr>
 										<td>Enfant 0 à 7 ans</td>
 										<td><?php echo htmlspecialchars($result[2]['tarif']); ?></td>
-										<td><input type="number" name="nEnfant" class="b-nombre"></td>
+										<td><input type="number" name="nEnfant" class="b-nombre" min="0" max="100" value = "0"></td>
 									</tr>
 									<tr>
 										<td>Voiture long.inf.4m</td>
 										<td><?php echo htmlspecialchars($result[3]['tarif']); ?></td>
-										<td><input type="number" name="nVoitInf4" class="b-nombre"></td>
+										<td><input type="number" name="nVoitInf4" class="b-nombre" min="0" max="100" value = "0"></td>
 									</tr>
 									<tr>
 										<td>Voiture long.inf.5m</td>
 										<td><?php echo htmlspecialchars($result[4]['tarif']); ?></td>
-										<td><input type="number" name="nVoitInf5" class="b-nombre"></td>
+										<td><input type="number" name="nVoitInf5" class="b-nombre" min="0" max="100" value = "0"></td>
 									</tr>
 									<tr>
 										<td>Fourgon</td>
 										<td><?php echo htmlspecialchars($result[5]['tarif']); ?></td>
-										<td><input type="number" name="nFourgon" class="b-nombre"></td>
+										<td><input type="number" name="nFourgon" class="b-nombre" min="0" max="100" value = "0"></td>
 									</tr>
 									<tr>
 										<td>Camping Car</td>
 										<td><?php echo htmlspecialchars($result[6]['tarif']); ?></td>
-										<td><input type="number" name="nCampingCar" class="b-nombre"></td>
+										<td><input type="number" name="nCampingCar" class="b-nombre" min="0" max="100" value = "0"></td>
 									</tr>
 									<tr>
 										<td>Camion</td>
 										<td><?php echo htmlspecialchars($result[7]['tarif']); ?></td>
-										<td><input type="number" name="nCamion" class="b-nombre"></td>
+										<td><input type="number" name="nCamion" class="b-nombre" min="0" max="100" value = "0"></td>
 									</tr>
 								</tbody>
-							</table>
+							</table><br>
+							<p>Vos points de fidélité : <?php 
+								$sql = 'SELECT pt_fid FROM utilisateur WHERE nom_uti = ?';
+								$stm = $bdd->prepare($sql);
+								$stm->execute(array($_SESSION['username']));
+								$result = $stm->fetchAll();
+
+								$points_fid = $result[0]['pt_fid'];
+
+								echo $points_fid;
+							?></p>
+							<?php if($points_fid >= 100){ ?>
+									<p>Vous pouvez utiliser vos points de fidélité pour obtenir un rabais :</p>
+									<input type="checkbox" name="fidelite" class="rad"> Utiliser mes points</label><br>
+								<?php } 
+							?>
 							<input type="submit" value="Réserver" class="b-reserver">
 						</form>
 				<?php	}

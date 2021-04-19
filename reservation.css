@@ -1,10 +1,10 @@
 .reservation{
-    margin-top:150px;
-    height: 700px;
+    margin-top:100px;
     width: 450px;
     border: 3px solid #333;
     margin-right:auto;
     margin-left:auto;
+    margin-bottom: 80px;
 }
 
 .titre{
@@ -19,12 +19,8 @@
     color: white;
 }
 
-.donnees{
-    height:650px;
-}
-
 .donnees > p, .donnees > form > p{
-    margin-left:2px;
+    margin-left:6px;
 }
 
 input{
@@ -51,9 +47,14 @@ td,th{
     width:100px;
     margin-left:175px;
     margin-top:15px;
+    margin-bottom: 10px;
 }
 
 .b-nombre{
     width:40px;
     height:20px;
+}
+
+.rad{
+    margin-left: 20px;
 }

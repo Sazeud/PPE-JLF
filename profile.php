@@ -7,6 +7,13 @@
         {
             header("Location: Connexion.php");
         }
+
+        try{
+            $bdd = new PDO('mysql:host=localhost;dbname=marieteam;charset=utf8','root','');
+        }
+        catch(Exception $e){
+            die('Erreur : ' .$e->getMessage());
+        }
     ?>
     <head>
        <meta charset="utf-8">
@@ -24,7 +31,7 @@
             <ul class="navbar-nav mr-auto">
             </ul>
             <span class="navbar-text">
-              Profile
+              Profil
             </span>
           <?php 
           if(isset($_SESSION['username'])){?>
@@ -36,12 +43,21 @@
     </nav>
         <div id="container">
             <form action="passwordChange.php" method="POST" id="form">
-                <h1>Profile</h1><br>
+                <h1>Profil</h1><br>
                     
                 <label><b>Nom d'utilisateur : <?php echo $_SESSION['username']; ?></b></label><br><br>
 
-                <label><b>Nombre de points de fidélité : </b></label><br><br>
+                <label><b>Nombre de points de fidélité : </b></label><br>
+                <?php 
+                    $sql = 'SELECT pt_fid FROM utilisateur WHERE nom_uti = ?';
+                    $stm = $bdd->prepare($sql);
+                    $stm->execute(array($_SESSION['username']));
+                    $result = $stm->fetchAll();
 
+                    $points = $result[0]['pt_fid'];
+                    echo '<center><p>'.$points.'</p></center>';
+                ?>
+                <label><a href="#">Gérer mes réservations</a></label>
                 <label><b>Changer de mot de passe :</b></label><br>
 
                 <label><b>Mot de passe</b></label>

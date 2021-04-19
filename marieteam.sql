@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : Dim 22 nov. 2020 à 21:52
+-- Généré le : lun. 19 avr. 2021 à 14:20
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -118,6 +118,20 @@ CREATE TABLE IF NOT EXISTS `enregistrer` (
   KEY `ENREGISTRER_RESERVATION0_FK` (`numReserv`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Déchargement des données de la table `enregistrer`
+--
+
+INSERT INTO `enregistrer` (`numType`, `numReserv`, `quantite`) VALUES
+(1, 54790, 2),
+(2, 54790, 0),
+(3, 54790, 1),
+(4, 54790, 1),
+(5, 54790, 0),
+(6, 54790, 1),
+(7, 54790, 0),
+(8, 54790, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -209,7 +223,7 @@ INSERT INTO `port` (`idPort`, `nom`) VALUES
 
 DROP TABLE IF EXISTS `reservation`;
 CREATE TABLE IF NOT EXISTS `reservation` (
-  `numReserv` int(11) NOT NULL,
+  `numReserv` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) NOT NULL,
   `adr` varchar(50) NOT NULL,
   `cp` int(11) NOT NULL,
@@ -219,7 +233,14 @@ CREATE TABLE IF NOT EXISTS `reservation` (
   PRIMARY KEY (`numReserv`),
   KEY `RESERVATION_CODE_FK` (`codeuti`),
   KEY `RESERVATION_TRAVERSEE_FK` (`numTrav`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=54791 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `reservation`
+--
+
+INSERT INTO `reservation` (`numReserv`, `nom`, `adr`, `cp`, `ville`, `numTrav`, `codeuti`) VALUES
+(54790, 'Petillon', '966 Avenue de dunkerque', 59160, 'Lomme', 367, 1);
 
 -- --------------------------------------------------------
 
@@ -253,10 +274,66 @@ DROP TABLE IF EXISTS `tarifer`;
 CREATE TABLE IF NOT EXISTS `tarifer` (
   `dateDeb` date NOT NULL,
   `code` int(11) NOT NULL,
-  `tarif` int(11) NOT NULL,
-  PRIMARY KEY (`dateDeb`,`code`),
-  KEY `TARIFER_LIAISON0_FK` (`code`)
+  `tarif` double NOT NULL,
+  `numType` int(11) NOT NULL,
+  PRIMARY KEY (`dateDeb`,`code`,`numType`),
+  KEY `TARIFER_LIAISON0_FK` (`code`),
+  KEY `numType` (`numType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `tarifer`
+--
+
+INSERT INTO `tarifer` (`dateDeb`, `code`, `tarif`, `numType`) VALUES
+('2020-09-01', 15, 18, 1),
+('2020-09-01', 15, 11.1, 2),
+('2020-09-01', 15, 5.6, 3),
+('2020-09-01', 15, 86, 4),
+('2020-09-01', 15, 129, 5),
+('2020-09-01', 15, 189, 6),
+('2020-09-01', 15, 205, 7),
+('2020-09-01', 15, 268, 8),
+('2020-09-01', 19, 27.2, 1),
+('2020-09-01', 19, 17.3, 2),
+('2020-09-01', 19, 9.8, 3),
+('2020-09-01', 19, 129, 4),
+('2020-09-01', 19, 194, 5),
+('2020-09-01', 19, 284, 6),
+('2020-09-01', 19, 308, 7),
+('2020-09-01', 19, 402, 8),
+('2021-06-16', 15, 20, 1),
+('2021-06-16', 15, 13.1, 2),
+('2021-06-16', 15, 7, 3),
+('2021-06-16', 15, 95, 4),
+('2021-06-16', 15, 142, 5),
+('2021-06-16', 15, 208, 6),
+('2021-06-16', 15, 226, 7),
+('2021-06-16', 15, 295, 8),
+('2021-06-16', 19, 29.3, 1),
+('2021-06-16', 19, 18.6, 2),
+('2021-06-16', 19, 10.6, 3),
+('2021-06-16', 19, 139, 4),
+('2021-06-16', 19, 209, 5),
+('2021-06-16', 19, 306, 6),
+('2021-06-16', 19, 332, 7),
+('2021-06-16', 19, 434, 8),
+('2021-09-16', 15, 19, 1),
+('2021-09-16', 15, 12.1, 2),
+('2021-09-16', 15, 6.4, 3),
+('2021-09-16', 15, 91, 4),
+('2021-09-16', 15, 136, 5),
+('2021-09-16', 15, 199, 6),
+('2021-09-16', 15, 216, 7),
+('2021-09-16', 15, 282, 8),
+('2021-09-16', 19, 28.5, 1),
+('2021-09-16', 19, 18.1, 2),
+('2021-09-16', 19, 10.2, 3),
+('2021-09-16', 19, 135, 4),
+('2021-09-16', 19, 203, 5),
+('2021-09-16', 19, 298, 6),
+('2021-09-16', 19, 323, 7),
+('2021-09-16', 19, 422, 8);
 
 -- --------------------------------------------------------
 
@@ -326,6 +403,7 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
   `code_uti` int(11) NOT NULL AUTO_INCREMENT,
   `nom_uti` varchar(50) NOT NULL,
   `mdp_uti` varchar(50) NOT NULL,
+  `pt_fid` int(11) NOT NULL,
   PRIMARY KEY (`code_uti`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
@@ -333,8 +411,8 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
 -- Déchargement des données de la table `utilisateur`
 --
 
-INSERT INTO `utilisateur` (`code_uti`, `nom_uti`, `mdp_uti`) VALUES
-(1, 'Sazed', '0103');
+INSERT INTO `utilisateur` (`code_uti`, `nom_uti`, `mdp_uti`, `pt_fid`) VALUES
+(1, 'Sazed', '0103', 9300);
 
 --
 -- Contraintes pour les tables déchargées
@@ -374,7 +452,8 @@ ALTER TABLE `reservation`
 --
 ALTER TABLE `tarifer`
   ADD CONSTRAINT `TARIFER_LIAISON0_FK` FOREIGN KEY (`code`) REFERENCES `liaison` (`code`),
-  ADD CONSTRAINT `TARIFER_PERIODE_FK` FOREIGN KEY (`dateDeb`) REFERENCES `periode` (`dateDeb`);
+  ADD CONSTRAINT `TARIFER_PERIODE_FK` FOREIGN KEY (`dateDeb`) REFERENCES `periode` (`dateDeb`),
+  ADD CONSTRAINT `tarifer_ibfk_1` FOREIGN KEY (`numType`) REFERENCES `type` (`numType`);
 
 --
 -- Contraintes pour la table `traversee`
