@@ -161,31 +161,25 @@
               <td>C<br>Véh.sup.2m</td>
             </tr>
             <?php 
-              $sql = 'SELECT T.numTrav, T.heure, B.nom, B.idBateau FROM traversee as T, bateau as B WHERE T.code = ? AND T.idBateau = B.idBateau AND date = ? ORDER BY heure';
+              $sql = 'SELECT T.numTrav, T.heure, B.nom, T.placesA, T.placesB, T.placesC FROM traversee as T, bateau as B WHERE T.code = ? AND T.idBateau = B.idBateau AND date = ? ORDER BY heure';
               $stm = $bdd->prepare($sql);
               $stm->execute(array($_GET['liaison'], $_GET['date']));
               $result = $stm->fetchAll();
               
-              foreach($result as $row){ ?>
+              foreach($result as $row){ 
+                if($row['placesA'] != 0){?>
                   <tr>
                     <td><?php echo htmlspecialchars($row['numTrav']);?></td>
                     <td><?php echo htmlspecialchars($row['heure']);?></td>
                     <td><?php echo htmlspecialchars($row['nom']);?></td>
-                    <?php 
-                      $sql = 'SELECT C.capaciteMax FROM contenir as C, bateau as B WHERE C.idBateau = ? AND C.idBateau = B.idBateau ORDER BY C.lettre';
-                      $stm = $bdd->prepare($sql);
-                      $stm->execute(array($row['idBateau']));
-                      $donnee = $stm->fetchAll(); ?>
-
+                    <td><?php echo htmlspecialchars($row['placesA']);?></td>
+                    <td><?php echo htmlspecialchars($row['placesB']);?></td>
+                    <td><?php echo htmlspecialchars($row['placesC']);?></td>
                       <form action="reservation.php" method="get">
-                      <?php
-                      foreach($donnee as $ligne){ ?>
-                        <td><?php echo htmlspecialchars($ligne['capaciteMax']);?></td>
-                      <?php }
-                    ?>
                     <td class="sansbordure"><input type="radio" id="<?php echo htmlspecialchars($row['numTrav']); ?>" name="reservation" value="<?php echo htmlspecialchars($row['numTrav']); ?>" required></td>
                   </tr>
               <?php }
+                }
             ?>
             </tbody>
         </table><br>

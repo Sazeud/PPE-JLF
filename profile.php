@@ -5,7 +5,7 @@
         session_regenerate_id();
         if(!isset($_SESSION['username']))
         {
-            header("Location: Connexion.php");
+            header("Location: Connexion.php?page=profile");
         }
 
         try{
@@ -41,7 +41,104 @@
       <?php } ?>
       </div>
     </nav>
-        <div id="container">
+    <?php 
+    if(isset($_GET['choix']) && $_GET['choix'] == "reservation"){?>
+        <div id="tableau">
+            <h1>Mes réservations</h1>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th>Num.Reservation</th>
+                    <th>Départ</th>
+                    <th>Arrivée</th>
+                    <th>Date Départ</th>
+                    <th>Heure Départ</th>
+                  </tr>
+                </thead>
+              <tbody>
+        <?php  
+            $sql = 'SELECT code_uti FROM utilisateur WHERE nom_uti = ?';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($_SESSION['username']));
+            $result = $stm->fetchAll();
+
+            $codeUti = $result[0]['code_uti'];
+
+            $sql = 'SELECT numReserv FROM reservation WHERE codeuti = ?';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($codeUti));
+            $result = $stm->fetchAll();
+
+            foreach($result as $row){
+
+            $numReserv = $row['numReserv'];
+
+            $sql = 'SELECT numTrav FROM reservation WHERE numReserv = ?';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($numReserv));
+            $result = $stm->fetchAll();
+
+            $numTrav = $result[0]['numTrav'];
+
+            $sql = 'SELECT code FROM traversee WHERE numTrav = ?';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($numTrav));
+            $result = $stm->fetchAll();
+
+            $codeLiaison = $result[0]['code'];
+
+            $sql = 'SELECT idPort, idPort_ARRIVEE FROM liaison WHERE code = ?';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($codeLiaison));
+            $result = $stm->fetchAll();
+
+            $idPortDep = $result[0]['idPort'];
+            $idPortArr = $result[0]['idPort_ARRIVEE'];
+
+            $sql = 'SELECT nom FROM port WHERE idPort = ?';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($idPortDep));
+            $result = $stm->fetchAll();
+
+            $PortDep = $result[0]['nom'];
+
+            $sql = 'SELECT nom FROM port WHERE idPort = ?';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($idPortArr));
+            $result = $stm->fetchAll();
+
+            $PortArr = $result[0]['nom'];
+
+            $sql = 'SELECT DATE_FORMAT(date, \'%d/%m/%Y\') as date_reo FROM  traversee WHERE numTrav = ?';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($numTrav));
+            $result = $stm->fetchAll();
+
+            $dateTrav = $result[0]['date_reo'];
+
+            $sql = 'SELECT heure FROM traversee WHERE numTrav = ?';
+            $stm = $bdd->prepare($sql);
+            $stm->execute(array($numTrav));
+            $result = $stm->fetchAll();
+
+            $heure = $result[0]['heure'];
+        ?>
+                <tr>
+                    <td><?php echo $numReserv?></td>
+                    <td><?php echo $PortDep?></td>
+                    <td><?php echo $PortArr?></td>
+                    <td><?php echo $dateTrav?></td>
+                    <td><?php echo $heure?></td>
+                    <form action ="ReservationSuppression.php" method="POST">
+                        <input type="hidden" name="suppression" value="<?php echo $numReserv?>">
+                        <td class="sansbordure"><input type="submit" value="Annuler Réservation"></td>
+                    </form>
+                </tr>
+        <?php
+                }
+            }
+        else{ ?>
+            <div id="container">
             <form action="passwordChange.php" method="POST" id="form">
                 <h1>Profil</h1><br>
                     
@@ -57,7 +154,7 @@
                     $points = $result[0]['pt_fid'];
                     echo '<center><p>'.$points.'</p></center>';
                 ?>
-                <label><a href="#">Gérer mes réservations</a></label>
+                <label><a href="profile.php?choix=reservation">Gérer mes réservations</a></label>
                 <label><b>Changer de mot de passe :</b></label><br>
 
                 <label><b>Mot de passe</b></label>
@@ -89,7 +186,7 @@
                             echo "<p style='color:red'>Les nouveaux mots de passes ne correspondent pas!</p>";
                         }
                     }
-                ?>
+                } ?>
             </form>
         </div>
     </body>

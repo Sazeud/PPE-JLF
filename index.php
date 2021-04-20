@@ -89,7 +89,7 @@
 
           $dateActuelle = $result[0]['d'];
 
-          $sql = 'SELECT L.code, P.idPort, idPort_ARRIVEE, DATE_FORMAT(date, \'%d/%m/%Y\') AS date_reorganise, heure, S.idSecteur FROM liaison as L, traversee as T, port as P, secteur as S WHERE P.nom= ? AND P.idPort = L.idPort AND L.code = T.code AND S.idSecteur = L.idSecteur AND date >= ? ORDER BY date_reorganise ,heure LIMIT 5';
+          $sql = 'SELECT L.code, P.idPort, idPort_ARRIVEE, DATE_FORMAT(date, \'%d/%m/%Y\') AS date_reorganise, date, heure, S.idSecteur FROM liaison as L, traversee as T, port as P, secteur as S WHERE P.nom= ? AND P.idPort = L.idPort AND L.code = T.code AND S.idSecteur = L.idSecteur AND date >= ? ORDER BY date_reorganise ,heure LIMIT 5';
           $stm = $bdd->prepare($sql);
           $stm->execute(array($_GET['port'],$dateActuelle));
           $stm->execute();
@@ -117,7 +117,7 @@
             $PortArr = $donnee[0]["nom"];
             ?>
               <tr>
-                <td><a href="liaison.php?liaison=<?php echo htmlspecialchars($codeLiaison);?>&<?php echo htmlspecialchars($row['idSecteur']);?>">L<?php echo htmlspecialchars($codeLiaison); ?></a></td>
+                <td><a href="liaison.php?liaison=<?php echo htmlspecialchars($codeLiaison);?>&date=<?php echo htmlspecialchars($row['date'])?>">L<?php echo htmlspecialchars($codeLiaison); ?></a></td>
                 <td><?php echo htmlspecialchars($PortDep); ?></td>
                 <td><?php echo htmlspecialchars($PortArr); ?></td>
                 <td><?php echo $row['date_reorganise']; ?></td>

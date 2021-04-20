@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 19 avr. 2021 à 14:20
+-- Généré le : mar. 20 avr. 2021 à 16:01
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -123,14 +123,10 @@ CREATE TABLE IF NOT EXISTS `enregistrer` (
 --
 
 INSERT INTO `enregistrer` (`numType`, `numReserv`, `quantite`) VALUES
-(1, 54790, 2),
-(2, 54790, 0),
-(3, 54790, 1),
-(4, 54790, 1),
-(5, 54790, 0),
-(6, 54790, 1),
-(7, 54790, 0),
-(8, 54790, 0);
+(1, 17052, 2),
+(1, 54471, 2),
+(2, 54471, 1),
+(4, 54471, 1);
 
 -- --------------------------------------------------------
 
@@ -228,6 +224,7 @@ CREATE TABLE IF NOT EXISTS `reservation` (
   `adr` varchar(50) NOT NULL,
   `cp` int(11) NOT NULL,
   `ville` varchar(50) NOT NULL,
+  `prix` double NOT NULL DEFAULT '0',
   `numTrav` int(11) NOT NULL,
   `codeuti` int(11) NOT NULL,
   PRIMARY KEY (`numReserv`),
@@ -239,8 +236,9 @@ CREATE TABLE IF NOT EXISTS `reservation` (
 -- Déchargement des données de la table `reservation`
 --
 
-INSERT INTO `reservation` (`numReserv`, `nom`, `adr`, `cp`, `ville`, `numTrav`, `codeuti`) VALUES
-(54790, 'Petillon', '966 Avenue de dunkerque', 59160, 'Lomme', 367, 1);
+INSERT INTO `reservation` (`numReserv`, `nom`, `adr`, `cp`, `ville`, `prix`, `numTrav`, `codeuti`) VALUES
+(17052, 'Petillon', '966 avenue de dunkerque', 59160, 'Lomme', 38, 256, 1),
+(54471, 'Petillon', '966 avenue de dunkerque', 59160, 'Lomme', 141.1, 367, 1);
 
 -- --------------------------------------------------------
 
@@ -346,6 +344,9 @@ CREATE TABLE IF NOT EXISTS `traversee` (
   `numTrav` int(11) NOT NULL,
   `date` date NOT NULL,
   `heure` varchar(50) NOT NULL,
+  `placesA` int(11) NOT NULL,
+  `placesB` int(11) NOT NULL,
+  `placesC` int(11) NOT NULL,
   `idBateau` int(11) NOT NULL,
   `code` int(11) NOT NULL,
   PRIMARY KEY (`numTrav`),
@@ -357,11 +358,11 @@ CREATE TABLE IF NOT EXISTS `traversee` (
 -- Déchargement des données de la table `traversee`
 --
 
-INSERT INTO `traversee` (`numTrav`, `date`, `heure`, `idBateau`, `code`) VALUES
-(76, '2020-11-24', '14:30', 1, 25),
-(143, '2020-11-26', '17:53', 2, 16),
-(256, '2020-11-25', '9:42', 2, 15),
-(367, '2020-11-25', '9:41', 3, 15);
+INSERT INTO `traversee` (`numTrav`, `date`, `heure`, `placesA`, `placesB`, `placesC`, `idBateau`, `code`) VALUES
+(76, '2021-11-24', '14:30', 238, 11, 2, 1, 25),
+(143, '2021-11-26', '17:53', 276, 5, 1, 2, 16),
+(256, '2021-11-25', '9:42', 272, 4, 1, 2, 15),
+(367, '2021-11-25', '9:41', 234, 1, 0, 3, 15);
 
 -- --------------------------------------------------------
 
@@ -412,7 +413,7 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
 --
 
 INSERT INTO `utilisateur` (`code_uti`, `nom_uti`, `mdp_uti`, `pt_fid`) VALUES
-(1, 'Sazed', '0103', 9300);
+(1, 'Sazed', '0103', 9150);
 
 --
 -- Contraintes pour les tables déchargées

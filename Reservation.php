@@ -76,8 +76,25 @@
 						$stm->execute(array($portArr));
 						$result = $stm->fetchAll();
 
-						$nomPortArr = $result[0]['nom']; ?>
-						<br>
+						$nomPortArr = $result[0]['nom']; 
+
+						$sql = 'SELECT placesA, placesB, placesC FROM traversee WHERE numTrav = ?';
+						$stm = $bdd->prepare($sql);
+						$stm->execute(array($_GET['reservation']));
+						$res = $stm->fetchAll();
+
+						if(isset($_GET['erreur'])){
+							if($_GET['erreur'] == 'A'){ ?>
+								<br><center><p style="color:red">Impossible de réserver, vous avez demandé plus de places qu'il n'en reste ! (<?php echo $res[0]['placesA']?> places restantes de type A)</p></center>
+					<?php		}
+							else if($_GET['erreur'] == 'B'){ ?>
+								<br><center><p style="color:red">Impossible de réserver, vous avez demandé plus de places qu'il n'en reste ! (<?php echo $res[0]['placesB']?> places restantes de type B)</p></center>
+					<?php		}
+							else if($_GET['erreur'] == 'C'){ ?>
+								<br><center><p style="color:red">Impossible de réserver, vous avez demandé plus de places qu'il n'en reste ! (<?php echo $res[0]['placesC']?> places restantes de type C)</p></center>
+					<?php		}
+						}
+						?>
 						<p>Liaison <?php echo htmlspecialchars($nomPortDep).' - '.htmlspecialchars($nomPortArr); ?><br>
 						Traversée n°<?php echo htmlspecialchars($_GET['reservation']).' le '.htmlspecialchars($dateT).' à '.htmlspecialchars($heure); ?><br>
 						Saisissez les informations nécessaires à la réservation :
@@ -100,6 +117,7 @@
 							<table class="reserver">
 								<thead>
 									<tr>
+										<th>Types</th>
 										<th>Catégories</th>
 										<th>Tarif en €</th>
 										<th>Quantité</th>
@@ -117,49 +135,64 @@
 									$stm = $bdd->prepare($sql);
 									$stm->execute(array($dateDeb));
 									$result = $stm->fetchAll();
-
 								?>
 								<tbody>
 									<tr>
+										<td>A</td>
 										<td>Adulte</td>
 										<td><?php echo htmlspecialchars($result[0]['tarif']); ?></td>
-										<td><input type="number" name="nAdulte" class="b-nombre" min="0" max="100" value = "0"></td>
+										<td><input type="number" name="nAdulte" class="b-nombre" min="0" max="<?php echo $res[0]['placesA']?>" value = "0"></td>
 									</tr>
 									<tr>
+										<td>A</td>
 										<td>Junior 8 à 18 ans</td>
 										<td><?php echo htmlspecialchars($result[1]['tarif']); ?></td>
-										<td><input type="number" name="nJunior" class="b-nombre" min="0" max="100" value = "0"></td>
+										<td><input type="number" name="nJunior" class="b-nombre" min="0" max="<?php echo $res[0]['placesA']?>" value = "0"></td>
 									</tr>
 									<tr>
+										<td>A</td>
 										<td>Enfant 0 à 7 ans</td>
 										<td><?php echo htmlspecialchars($result[2]['tarif']); ?></td>
-										<td><input type="number" name="nEnfant" class="b-nombre" min="0" max="100" value = "0"></td>
+										<td><input type="number" name="nEnfant" class="b-nombre" min="0" max="<?php echo $res[0]['placesA']?>" value = "0"></td>
 									</tr>
+									<?php 
+										if($res[0]['placesB'] != 0){
+									?>
 									<tr>
+										<td>B</td>
 										<td>Voiture long.inf.4m</td>
 										<td><?php echo htmlspecialchars($result[3]['tarif']); ?></td>
-										<td><input type="number" name="nVoitInf4" class="b-nombre" min="0" max="100" value = "0"></td>
+										<td><input type="number" name="nVoitInf4" class="b-nombre" min="0" max="<?php echo $res[0]['placesB']?>" value = "0"></td>
 									</tr>
 									<tr>
+										<td>B</td>
 										<td>Voiture long.inf.5m</td>
 										<td><?php echo htmlspecialchars($result[4]['tarif']); ?></td>
-										<td><input type="number" name="nVoitInf5" class="b-nombre" min="0" max="100" value = "0"></td>
+										<td><input type="number" name="nVoitInf5" class="b-nombre" min="0" max="<?php echo $res[0]['placesB']?>" value = "0"></td>
 									</tr>
+									<?php 
+									}
+										if($res[0]['placesC'] != 0){
+									?>
 									<tr>
+										<td>C</td>
 										<td>Fourgon</td>
 										<td><?php echo htmlspecialchars($result[5]['tarif']); ?></td>
-										<td><input type="number" name="nFourgon" class="b-nombre" min="0" max="100" value = "0"></td>
+										<td><input type="number" name="nFourgon" class="b-nombre" min="0" max="<?php echo $res[0]['placesC']?>" value = "0"></td>
 									</tr>
 									<tr>
+										<td>C</td>
 										<td>Camping Car</td>
 										<td><?php echo htmlspecialchars($result[6]['tarif']); ?></td>
-										<td><input type="number" name="nCampingCar" class="b-nombre" min="0" max="100" value = "0"></td>
+										<td><input type="number" name="nCampingCar" class="b-nombre" min="0" max="<?php echo $res[0]['placesC']?>" value = "0"></td>
 									</tr>
 									<tr>
+										<td>C</td>
 										<td>Camion</td>
 										<td><?php echo htmlspecialchars($result[7]['tarif']); ?></td>
-										<td><input type="number" name="nCamion" class="b-nombre" min="0" max="100" value = "0"></td>
+										<td><input type="number" name="nCamion" class="b-nombre" min="0" max="<?php echo $res[0]['placesC']?>" value = "0"></td>
 									</tr>
+								<?php }?>
 								</tbody>
 							</table><br>
 							<p>Vos points de fidélité : <?php 
