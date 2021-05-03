@@ -1,0 +1,47 @@
+utilisateur MySQL glpi :
+GLPI
+glpi#0103
+
+Administrateur VDEV :
+admin.vdev
+ad?=vdev58
+
+développeur VDEV :
+flo.petillon
+flo?=pet57
+
+développeur VDEV :
+ju.thierry
+julien&th#47
+
+développeur VDEV :
+leo.derouck
+derck/47?
+
+responsable glpi MarieTeam :
+respMar
+marie?team
+
+utilisateur glpi MarieTeam :
+dany.monray
+dany?6354
+
+utilisateur glpi MarieTeam :
+edouard.delagoutte
+delagoutte.951
+
+responsable glpi Entreprise X:
+respX
+resp?=x
+
+utilisateur glpi eX :
+dan.bourgeot
+d.bourg?45
+
+responsable glpi Entreprise Y :
+respY
+responsable=&58
+
+utilisateur glpi eY :
+fred.delarue
+del=fre987
