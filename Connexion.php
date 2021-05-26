@@ -12,6 +12,7 @@
     ?>
     <body>
         <div id="container">
+            <!-- Formulaire de connexion au compte utilisateur -->
             <form action="verificationConnexion.php" method="POST">
                 <h1>Connexion</h1>
                 
@@ -24,6 +25,7 @@
                 <input type="submit" id='submit' value='Connexion'>
                 <p><center><a href="Inscription.php">Inscription</a> si vous n'avez pas de compte<center></p>
                 <?php
+                    //Message renvoyé en cas d'erreur 
                     if(isset($_GET['erreur'])){
                         $erreur = $_GET['erreur'];
                         if($erreur == 1 || $erreur == 2){

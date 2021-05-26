@@ -11,6 +11,7 @@
       session_start();
       session_regenerate_id();
 
+      //Connexion à la base de donnée
       try{
         $bdd = new PDO('mysql:host=localhost;dbname=marieteam;charset=utf8','root','');
       }
@@ -18,6 +19,8 @@
         die('Erreur : '.$e->getMessage());
       }
     ?>
+
+    <!-- Barre de navigation du site web MarieTeam -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="index.php">MarieTeam</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,15 +45,21 @@
         <?php } ?>
       </div>
     </nav>
+
+    <!-- Formulaire permettant d'indiquer le secteur de la liaison recherché -->
     <div class="choix">
       <form method="get" action="liaison.php">
         <select name="secteur">
                 <?php
+
+                //Requête permettant de récupérer le nom de chaque secteur
                 $sql = 'SELECT nom FROM secteur';
                 $stm = $bdd->prepare($sql);
                 $stm->execute();
                 $result_secteur = $stm->fetchAll();
+
                 foreach($result_secteur as $row){?>
+                  <!-- Les noms sont affichés sous forme de liste -->
                   <option value=<?php echo htmlspecialchars($row['nom']);?>><?php echo htmlspecialchars($row['nom']);?></option>
                 <?php
                 }
@@ -60,13 +69,17 @@
       </form>
     </div>
     <?php 
+      //On vérifie que le secteur est bien indiqué pour afficher la suite
       if(isset($_GET['secteur'])){
     ?>
+    <!-- Formulaire permettant d'indiquer la liaison recherché -->
     <div class ="choix">
       <form method="get" action="liaison.php">
         <div class="liaison">
         <select name="liaison">
                 <?php
+
+                //Requête récupérant l'id du secteur sélectionné
                 $sql = 'SELECT idSecteur FROM secteur WHERE nom = ?';
                 $stm = $bdd->prepare($sql);
                 $stm->execute(array($_GET['secteur']));
@@ -74,12 +87,15 @@
 
                 $idSec = $result[0]['idSecteur'];
 
+                //On récupère les informations de chaque liaison de ce secteur
                 $sql = 'SELECT code, idPort, idPort_ARRIVEE FROM liaison WHERE idSecteur = ?';
                 $stm = $bdd->prepare($sql);
                 $stm->execute(array($idSec));
                 $result = $stm->fetchAll();
 
                 foreach($result as $row){
+
+                  //On récupère le nom du port de départ
                   $sql = 'SELECT nom FROM port WHERE idPort = ?';
                   $stm = $bdd->prepare($sql);
                   $stm->execute(array($row['idPort']));
@@ -87,6 +103,7 @@
 
                   $nomPortDep = $donnee[0]['nom'];
 
+                  //On récupère le nom du port d'arrivée
                   $sql = 'SELECT nom FROM port WHERE idPort = ?';
                   $stm = $bdd->prepare($sql);
                   $stm->execute(array($row['idPort_ARRIVEE']));
@@ -94,6 +111,8 @@
 
                   $nomPortArr = $donnee[0]['nom'];
                   ?>
+
+                  <!-- Le port de départ et le port d'arrivée de chaque liaison est affichée -->
                   <option value=<?php echo htmlspecialchars($row['code']);?>><?php echo htmlspecialchars($nomPortDep);?> - <?php echo htmlspecialchars($nomPortArr);?></option>
                 <?php
                 }
@@ -101,6 +120,8 @@
         </select>
         </div>
         <?php
+
+          //On récupère la date du jour
           $sql = 'SELECT DATE(NOW()) as d';
           $stm = $bdd->prepare($sql);
           $stm->execute();
@@ -108,6 +129,8 @@
 
           $dateA = $result[0]['d'];
         ?>
+
+        <!-- Formulaire permettant d'indiquer la date voulue -->
         <div class="date">
           <input name="date" type="date" value="<?php echo $dateA ?>">
         </div>
@@ -117,7 +140,11 @@
     </div>
     <?php
      }
+
+     //On vérifie que le code de liaison est bien indiqué
      if(isset($_GET['liaison'])){
+
+      //Requête permettant de récupérer l'id du port de Départ et du port d'arrivé
       $sql = 'SELECT idPort, idPort_ARRIVEE FROM liaison WHERE code = ?';
       $stm = $bdd->prepare($sql);
       $stm->execute(array($_GET['liaison']));
@@ -126,6 +153,7 @@
       $idP1 = $result[0]['idPort'];
       $idP2 = $result[0]['idPort_ARRIVEE'];
 
+      //Requête permettant de récupérer le nom du port de départ
       $sql = 'SELECT nom FROM port WHERE idPort = ?';
       $stm = $bdd->prepare($sql);
       $stm->execute(array($idP1));
@@ -133,6 +161,7 @@
 
       $nomPortDep = $donnee[0]['nom'];
 
+      //Requête permettant de récupérer le nom du port d'arrivée
       $sql = 'SELECT nom FROM port WHERE idPort = ?';
       $stm = $bdd->prepare($sql);
       $stm->execute(array($idP2));
@@ -140,6 +169,7 @@
 
       $nomPortArr = $donnee[0]['nom'];
     ?>
+      <!-- Tableau listant toutes les traversées d'une liaison à la date donnée -->
       <div class="table">
         <?php
           echo "<h2>".$nomPortDep." - ".$nomPortArr."</h2>";
@@ -161,14 +191,18 @@
               <td>C<br>Véh.sup.2m</td>
             </tr>
             <?php 
+
+              //Requête permettant de récupérer les données de toutes les traversées correspondant aux critères demandés
               $sql = 'SELECT T.numTrav, T.heure, B.nom, T.placesA, T.placesB, T.placesC FROM traversee as T, bateau as B WHERE T.code = ? AND T.idBateau = B.idBateau AND date = ? ORDER BY heure';
               $stm = $bdd->prepare($sql);
               $stm->execute(array($_GET['liaison'], $_GET['date']));
               $result = $stm->fetchAll();
               
               foreach($result as $row){ 
+                //On vérifie qu'il y a encore des places disponibles
                 if($row['placesA'] != 0){?>
                   <tr>
+                    <!-- On met toutes les données dans le tableau -->
                     <td><?php echo htmlspecialchars($row['numTrav']);?></td>
                     <td><?php echo htmlspecialchars($row['heure']);?></td>
                     <td><?php echo htmlspecialchars($row['nom']);?></td>

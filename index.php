@@ -17,6 +17,8 @@
     }
 
     ?>
+
+    <!-- Barre de navigation du site MarieTeam -->
   	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 	  <a class="navbar-brand" href="index.php">MarieTeam</a>
 	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,8 +45,10 @@
 	</nav>
 	<br><br><br><br>
 
-	 <div class="container">
+  
+	<div class="container">
       <h1>Tableaux des prochaines traversées</h1>
+      <!-- Formulaire permettant de voir les liaisons partant du port de départ indiqué -->
       <p>Veuillez entrer un port de départ afin de voir les prochaines traversées disponibles :</p>
       <form action="index.php" method="GET">
         <label><b>Liaison :</b></label> 
@@ -53,11 +57,18 @@
       </form>
 
       <?php 
+      //Cela ne s'affiche que si le port de départ est indiqué
       if(isset($_GET['port'])){
+
+        //Requête permettant de vérifier si le port existe dans la base de donnée
         $req = $bdd->prepare('SELECT * FROM port WHERE nom = ?');
         $req->execute(array($_GET['port']));
         $count = $req->rowCount();
+
+        //Si count est différent de 0 alors le port existe
         if($count != 0){
+
+          //Requête permettant d'avoir le nom exacte avec les majuscules et accent
           $sql = 'SELECT nom FROM port WHERE nom = ?';
           $stm = $bdd->prepare($sql);
           $stm->execute(array($_GET['port']));
@@ -69,6 +80,7 @@
           echo "<br>";
           echo "<h2>Prochaines liaisons partant de ".htmlspecialchars($nom)."</h2>"; ?>
 
+          <!-- Tableau présentant les liaisons partant du port indiqué -->
           <table class="table">
             <thead>
               <tr>
@@ -82,6 +94,7 @@
           <tbody>
 
           <?php
+          //On récupère la date du jour afin d'afficher seulement les prochaines liaisons pas celles déjà passées
           $sql = 'SELECT DATE(NOW()) as d';
           $stm = $bdd->prepare($sql);
           $stm->execute();
@@ -89,17 +102,20 @@
 
           $dateActuelle = $result[0]['d'];
 
+          //On récupère toutes les liaisons partant du port indiqué et avec une date supérieur à la date du jour
           $sql = 'SELECT L.code, P.idPort, idPort_ARRIVEE, DATE_FORMAT(date, \'%d/%m/%Y\') AS date_reorganise, date, heure, S.idSecteur FROM liaison as L, traversee as T, port as P, secteur as S WHERE P.nom= ? AND P.idPort = L.idPort AND L.code = T.code AND S.idSecteur = L.idSecteur AND date >= ? ORDER BY date_reorganise ,heure LIMIT 5';
           $stm = $bdd->prepare($sql);
           $stm->execute(array($_GET['port'],$dateActuelle));
           $stm->execute();
           $result = $stm->fetchAll();
 
+          //Pour chaque liaison on récupère les données qui nous intéresse afin de les afficher
           foreach($result as $row){
             $codeLiaison = $row['code'];
             $idPortDep = $row['idPort'];
             $idPortArr = $row['idPort_ARRIVEE'];
 
+            //On récupère le nom du port de départ
             $sql = 'SELECT nom FROM port WHERE idPort = ?';
             $stm = $bdd->prepare($sql);
             $stm->execute(array($idPortDep));
@@ -108,6 +124,7 @@
 
             $PortDep = $donnee[0]["nom"];
 
+            //On récupère le nom du port d'arrivé'
             $sql = 'SELECT nom FROM port WHERE idPort = ?';
             $stm = $bdd->prepare($sql);
             $stm->execute(array($idPortArr));
@@ -116,6 +133,7 @@
 
             $PortArr = $donnee[0]["nom"];
             ?>
+              <!-- Les données sont affichés dans le tableau -->
               <tr>
                 <td><a href="liaison.php?liaison=<?php echo htmlspecialchars($codeLiaison);?>&date=<?php echo htmlspecialchars($row['date'])?>">L<?php echo htmlspecialchars($codeLiaison); ?></a></td>
                 <td><?php echo htmlspecialchars($PortDep); ?></td>
@@ -130,6 +148,8 @@
     </div>
     <?php
         }
+        
+        //Si le port n'existe pas alors un message d'erreur est envoyé
         else if($count == 0){?>
           <p>Le port que vous avez entré n'existe pas ! Veuillez réessayer</p>
           <?php

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+*ù<!DOCTYPE html>
 <html>
     <?php
         session_start();

@@ -7,6 +7,7 @@
     <body>
         <div id="container">
             
+            <!-- Formulaire de création de compte utilisateur -->
             <form action="verificationInscription.php" method="POST">
                 <h1>Inscription</h1>
                 
@@ -22,6 +23,7 @@
                 <input type="submit" id='submit' value='Inscription' >
                 <p><center><a href="Connexion.php">Connexion</a> si vous avez un compte<center></p>
                  <?php
+                 //En cas d'erreur renvoi des messages approprié au type d'erreur
                     if(isset($_GET['erreur'])){
                         $err = $_GET['erreur'];
                         if($err==1){
