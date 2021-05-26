@@ -60,7 +60,7 @@
 
                 foreach($result_secteur as $row){?>
                   <!-- Les noms sont affichés sous forme de liste -->
-                  <option value=<?php echo htmlspecialchars($row['nom']);?>><?php echo htmlspecialchars($row['nom']);?></option>
+                  <option value=<?php echo $row['nom'];?>><?php echo htmlspecialchars($row['nom']);?></option>
                 <?php
                 }
               ?>
@@ -78,7 +78,7 @@
         <div class="liaison">
         <select name="liaison">
                 <?php
-
+                echo $_GET['secteur'];
                 //Requête récupérant l'id du secteur sélectionné
                 $sql = 'SELECT idSecteur FROM secteur WHERE nom = ?';
                 $stm = $bdd->prepare($sql);
