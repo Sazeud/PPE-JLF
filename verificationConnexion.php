@@ -21,12 +21,14 @@ if(isset($_POST['username']) && isset($_POST['password'])){
 	if($username != "" && $password != ""){
 
 		//On vérifie si dans la base de donnée il a un utilisateur correspondant aux données indiquées
-		$req = $bdd->prepare('SELECT * FROM utilisateur WHERE nom_uti = ? AND mdp_uti = ?');
-		$req->execute(array($username,$password));
-		$count = $req->rowCount();
+		$req = $bdd->prepare('SELECT mdp_uti FROM utilisateur WHERE nom_uti = ?');
+		$req->execute(array($username));
+		$result = $req->fetchAll();
+
+		$password_hash = $result[0]['mdp_uti'];
 
 		//Si la requête renvoi une ligne alors on peut avancer
-		if($count != 0){
+		if(password_verify($password, $password_hash)){
 
 			//On crée une variable session qui stock l'username afin de pouvoir le réutiliser sur d'autres pages
 			$_SESSION['username'] = $username;

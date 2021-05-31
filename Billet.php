@@ -1,21 +1,38 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Marie Team | Billet</title>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="bootstrap.css">
-        <link rel="stylesheet" href="billet.css">
-    </head>
-    <?php
-			session_start();
-			session_regenerate_id();
-			//Connexion à la base de donnée
-			try{
-				$bdd = new PDO('mysql:host=localhost;dbname=marieteam;charset=utf8','root','');
-			}
-			catch(Exception $e){
-				die('Erreur : ' .$e->getMessage());
-			}
+<html lang="fr">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Marie Team | Billet</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/one-page-wonder.css" rel="stylesheet">
+  <link href="css/footer.css" rel="stylesheet">
+
+</head>
+
+  <?php
+            session_start();
+            session_regenerate_id();
+            //Connexion à la base de donnée
+            try{
+                $bdd = new PDO('mysql:host=localhost;dbname=marieteam;charset=utf8','root','');
+            }
+            catch(Exception $e){
+                die('Erreur : ' .$e->getMessage());
+            }
 
             //On récupère le nombre de places restantes dans chaque catégorie pour la traversée concernée
             $sql = 'SELECT placesA, placesB, placesC FROM traversee WHERE numTrav = ?';
@@ -60,35 +77,49 @@
                 //Renvoi vers la page réservation avec le message d'erreur places de catégorie C insuffisante
                 header("Location: reservation.php?reservation=$numTrav&erreur=C");
             }
-	?>
+    ?>
 
-    <!-- Barre de navigation du site MarieTeam -->
-    <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="index.php">MarieTeam</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-            </ul>
-            <span class="navbar-text">
-            Page du billet
-            </span>
-            <?php if(!isset($_SESSION['username'])){?>
-            <form class="form-inline my-2 my-lg-0">
-            <a class="nav-link" href="Connexion.php">Connexion/Inscription<span class="sr-only">(current)</span></a>
-            </form>
-            <?php }
+<body>
+  
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+        <div>
+        <a href="#top" class="logo">
+          <img src="img/logo.png"/>
+        </a>
+      </div>
+      <a class="navbar-brand" href="index.php">MarieTeam</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+          <?php if(!isset($_SESSION['username'])){?>
+              <form class="form-inline my-2 my-lg-0">
+                <a class="nav-link" href="Connexion.php">Connexion/Inscription<span class="sr-only">(current)</span></a>
+              </form>
+          <?php }
             else if(isset($_SESSION['username'])){?>
-            <form class="form-inline my-2 my-lg-0">
-            <a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
-            <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
-            </form>
-            <?php } ?>
-        </div>
-    </nav>
-    <?php
+              <form class="form-inline my-2 my-lg-0">
+                <a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
+                <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
+              </form>
+          <?php } ?>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header id="home" class="masthead text-center text-white">
+
+    <section class="profil" >
+        <div class="container bg-secondary py-5">
+             <?php
         //On vérifie que l'utilisateur est bien connecté
         if(isset($_SESSION['username'])){
     ?>
@@ -204,12 +235,12 @@
             ?>
                 <p>Différentes informations par rapport à votre réservation :</p>
             <?php
-            echo "<ul><li>Réservation enregistré sous le n° : ".$numReservation.'</li>';
+            echo "<li>Réservation enregistré sous le n° : ".$numReservation.'</li>';
             echo '<li>Prénom : '.$_POST["prenom"].'</li>';
             echo '<li>Nom : '.$_POST["nom"].'</li>';
             echo '<li>Adresse : ' .$_POST["adresse"].'</li>';
             echo '<li>Code Postal : ' .$_POST["cp"].'</li>';
-            echo '<li>Ville : ' .$_POST["ville"].'</li></ul>';    
+            echo '<li>Ville : ' .$_POST["ville"].'</li>';    
 
             //On récupère la date de début de la période
             $sql='SELECT T.dateDeb FROM tarifer as T,periode as P WHERE T.dateDeb = P.dateDeb AND ? > P.dateDeb AND ? < P.dateFin';
@@ -230,7 +261,6 @@
         ?>
         <!-- Informations concernant les passagers et véhicules sur la réservation -->
         <p>Nombres de personnes et véhicules que comprend votre réservation :</p>
-        <ul>
         <?php
             //On récupère le nombre de places restantes par catégorie pour la traversée
             $sql = 'SELECT placesA, placesB, placesC FROM traversee WHERE numTrav = ?';
@@ -253,7 +283,7 @@
                 $result = $stm->fetchAll();
 
                 //On ajoute au total à payer le tarif de la catégorie
-                $totalPaye = $totalPaye + $_POST['nAdulte']*$result[0]['tarif'];
+                $totalPaye = $totalPaye + $_POST['nAdulte'] * $result[0]['tarif'];
 
                 //On verifie s'il n'y a pas déjà des données par rapport à ce numéro de réservation
                 $sql = 'SELECT * FROM enregistrer WHERE numType = 1 AND numReserv = ?';
@@ -351,7 +381,7 @@
             }
 
             //On verifie si la variable est initialisée et supérieure à 0 concernant le nombre de véhicule inférieur à 4m
-            if($_POST['nVoitInf4'] > 0 && isset($_POST['nVoitInf4'])){
+            if(isset($_POST['nVoitInf4']) && $_POST['nVoitInf4'] > 0){
                 echo "<li>Voiture Inférieur à 4m : ".htmlspecialchars($_POST['nVoitInf4']).'</li>';
 
                 //On récupère le tarif pour cette catégorie 
@@ -387,7 +417,7 @@
             }
 
             //On verifie si la variable est initialisée et supérieure à 0 concernant le nombre de véhicule inférieur à 5m
-            if($_POST['nVoitInf5'] > 0 && isset($_POST['nVoitInf5'])){
+            if(isset($_POST['nVoitInf5']) && $_POST['nVoitInf5'] > 0){
                 echo "<li>Voiture Inférieur à 5m : ".htmlspecialchars($_POST['nVoitInf5']).'</li>';
 
                 //On récupère le tarif pour cette catégorie 
@@ -423,7 +453,7 @@
             }
 
             //On verifie si la variable est initialisée et supérieure à 0 concernant le nombre de fourgon
-            if(isset($_POST['nFourgon']) && $_POST['nFourgon'] > 0 ){
+            if(isset($_POST['nFourgon']) && $_POST['nFourgon'] > 0){
                 echo "<li>Fourgon : ".htmlspecialchars($_POST['nFourgon']).'</li>';
 
                 //On récupère le tarif pour cette catégorie 
@@ -454,7 +484,7 @@
                     //On met à jour le nombre de places B
                     $sql = 'UPDATE traversee SET placesC = ? WHERE numTrav = ?';
                     $stm = $bdd->prepare($sql);
-                    $stm->execute(array($newPlacesB, $numTrav));
+                    $stm->execute(array($newPlacesC, $numTrav));
                 }
             }
 
@@ -490,7 +520,7 @@
                     //On met à jour le nombre de places C
                     $sql = 'UPDATE traversee SET placesC = ? WHERE numTrav = ?';
                     $stm = $bdd->prepare($sql);
-                    $stm->execute(array($newPlacesB, $numTrav));
+                    $stm->execute(array($newPlacesC, $numTrav));
                 }
             }
 
@@ -526,10 +556,9 @@
                     //On met à jour le nombre de places C
                     $sql = 'UPDATE traversee SET placesC = ? WHERE numTrav = ?';
                     $stm = $bdd->prepare($sql);
-                    $stm->execute(array($newPlacesB, $numTrav));
+                    $stm->execute(array($newPlacesC, $numTrav));
                 }
             }
-            echo "</ul>";
 
             //On récupère le prix de la réservation
             $sql = 'SELECT prix FROM reservation WHERE numReserv = ?';
@@ -608,12 +637,35 @@
             }
         ?>
         <br><br>
-        <p>Vous pouvez revenir à <a href="index.php">l'accueil</a> pour faire d'autres réservations ou suivre vos réservations sur votre <a href="profile.php">profil</a>.</p>
+        <p>Vous pouvez revenir à <a class="lien" href="index.php">l'accueil</a> pour faire d'autres réservations ou suivre vos réservations sur votre <a class="lien" href="profile.php">profil</a>.</p>
     </div>
         <?php } 
             else{
                 header('Location: reservation.php?reservation='.$_SESSION['numTraversee']);
             }
         ?>
-    </body>
+        </div>
+    </section>
+    
+  </header>
+
+
+    <!-- Footer -->
+        <footer class="py-5 bg-dark">
+            <div class="container" >
+            <p class="m-0 text-center text-white small">MarieTEAM présenté par JLF</p>
+            </div>
+        </footer>
+
+  <!-- JS -->
+        <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>        
+        <script type="text/javascript" src="js/SmoothScroll.js"></script>
+        <script type="text/javascript" src="js/jquery.scrollTo.min.js"></script>
+        <script type="text/javascript" src="js/jquery.localScroll.min.js"></script>
+
+</body>
+
 </html>

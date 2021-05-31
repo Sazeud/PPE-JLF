@@ -1,12 +1,29 @@
-<!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>Marie Team | Page de réservation</title>
-		<link rel="stylesheet" href="bootstrap.css">
-		<link rel="stylesheet" href="reservation.css">
-	</head>
-		<?php
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Marie Team | Reservation</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/one-page-wonder.css" rel="stylesheet">
+  <link href="css/footer.css" rel="stylesheet">
+
+</head>
+
+  <?php
 			session_start();
 			session_regenerate_id();
 			$_SESSION['numTraversee'] = $_GET['reservation'];
@@ -18,39 +35,51 @@
 			catch(Exception $e){
 				die('Erreur : ' .$e->getMessage());
 			}
-		?>	
-	<body>
+		?>
+
+<body>
 		<!-- Verifie si l'utilisateur est connecté -->
 		<?php if(isset($_SESSION['username'])){ ?>
+			
+  
 
-		<!-- Barre de navigation du site MarieTeam -->
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="index.php">MarieTeam</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav mr-auto">
-				</ul>
-				<span class="navbar-text">
-				Page de réservation
-				</span>
-			<?php if(!isset($_SESSION['username'])){?>
-				<form class="form-inline my-2 my-lg-0">
-				<a class="nav-link" href="Connexion.php">Connexion/Inscription<span class="sr-only">(current)</span></a>
-				</form>
-			<?php }
-			else if(isset($_SESSION['username'])){?>
-				<form class="form-inline my-2 my-lg-0">
-				<a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
-				<a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
-			</form>
-			<?php } ?>
-			</div>
-		</nav>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+    	<div>
+        <a href="#top" class="logo">
+          <img src="img/logo.png"/>
+        </a>
+      </div>
+      <a class="navbar-brand" href="index.php">MarieTeam</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
 
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+          <?php if(!isset($_SESSION['username'])){?>
+              <form class="form-inline my-2 my-lg-0">
+                <a class="nav-link" href="Connexion.php">Connexion/Inscription<span class="sr-only">(current)</span></a>
+              </form>
+          <?php }
+            else if(isset($_SESSION['username'])){?>
+              <form class="form-inline my-2 my-lg-0">
+                <a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
+                <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
+              </form>
+          <?php } ?>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-		<div class="reservation">
+  <header id="home" class="masthead text-center text-white">
+
+    <section >
+    <div class="container bg-secondary py-5">
 			<div class="titre">
 				<h5>Réservation :<h5>
 			</div>
@@ -130,7 +159,7 @@
 							</p>
 
 							<!-- Tableau présentant les différents choix de passagers et de véhicules -->
-							<table class="reserver">
+							<table class="reserver col-lg-12 col-md-12 col-sm-12 text-center">
 								<thead>
 									<tr>
 										<th>Types</th>
@@ -247,5 +276,27 @@
 			header('Location: Connexion.php');
 		}
 		?>
-	</body>
+  </section>
+    
+  </header>
+
+
+    <!-- Footer -->
+        <footer class="py-4 bg-dark fixed-bottom ">
+            <div class="container" >
+            <p class="m-0 text-center text-white small">MarieTEAM présenté par JLF</p>
+            </div>
+        </footer>
+
+  <!-- JS -->
+        <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>        
+        <script type="text/javascript" src="js/SmoothScroll.js"></script>
+        <script type="text/javascript" src="js/jquery.scrollTo.min.js"></script>
+        <script type="text/javascript" src="js/jquery.localScroll.min.js"></script>
+
+</body>
+
 </html>

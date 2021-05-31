@@ -45,5 +45,6 @@
             $stm = $bdd->prepare($sql);
             $stm->execute(array($_POST['suppression']));
         }
+        header('Location: profile.php?choix=reservation');
     }
 ?>

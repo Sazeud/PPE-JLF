@@ -28,10 +28,11 @@ if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['verif
 
 			//S'il n'y a pas de compte utilisateur avec ce pseudo on peut réaliser la requête
 			if($count == 0){
+				$password_hash = password_hash($password, PASSWORD_DEFAULT);
 
 				//Requête d'ajout de l'utilisateur dans la base de donnée
 				$requete = $bdd->prepare("INSERT INTO utilisateur(nom_uti, mdp_uti, pt_fid) VALUES (?,?,0)");
-				$requete->execute(array($username,$password));
+				$requete->execute(array($username,$password_hash));
 
 				//Renvoi vers la page d'inscription avec le message de validation de création de compte
 				header('Location: Inscription.php?creer=1');

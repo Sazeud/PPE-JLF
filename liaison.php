@@ -1,12 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="utf-8">
-    <title>Marie Team | Page de liaison</title>
-    <link rel="stylesheet" href="bootstrap.css">
-    <link rel="stylesheet" href="liaison.css">
-  </head>
-  <body>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Marie Team | Page de Connexion</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/one-page-wonder.css" rel="stylesheet">
+  <link href="css/footer.css" rel="stylesheet">
+
+</head>
+
     <?php 
       session_start();
       session_regenerate_id();
@@ -20,34 +36,53 @@
       }
     ?>
 
-    <!-- Barre de navigation du site web MarieTeam -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<body>
+  
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+      <div>
+        <a href="#top" class="logo">
+          <img src="img/logo.png"/>
+        </a>
+      </div>
       <a class="navbar-brand" href="index.php">MarieTeam</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+          <?php if(!isset($_SESSION['username'])){?>
+              <form class="form-inline my-2 my-lg-0">
+                <a class="nav-link" href="Connexion.php">Connexion/Inscription<span class="sr-only">(current)</span></a>
+              </form>
+          <?php }
+            else if(isset($_SESSION['username'])){?>
+              <form class="form-inline my-2 my-lg-0">
+                <a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
+                <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
+              </form>
+          <?php } ?>
+          </li>
         </ul>
-        <span class="navbar-text">
-          Page des liaisons
-        </span>
-        <?php if(!isset($_SESSION['username'])){?>
-        <form class="form-inline my-2 my-lg-0">
-          <a class="nav-link" href="Connexion.php">Connexion/Inscription<span class="sr-only">(current)</span></a>
-        </form>
-        <?php }
-        else if(isset($_SESSION['username'])){?>
-          <form class="form-inline my-2 my-lg-0">
-          <a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
-          <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
-        </form>
-        <?php } ?>
       </div>
-    </nav>
+    </div>
+  </nav>
+
+  <header id="home" class="masthead text-center text-white">
+    <div class="masthead-content">
+      <div class="container">
+        <h4 class="masthead-heading mb-0">Marie Team</h>
+      </div>
+    </div>
+    
+  </header>
 
     <!-- Formulaire permettant d'indiquer le secteur de la liaison recherché -->
-    <div class="choix">
+    <div class="choix col-lg-12 col-md-12 col-sm-12 text-center py-5">
       <form method="get" action="liaison.php">
         <select name="secteur">
                 <?php
@@ -60,25 +95,25 @@
 
                 foreach($result_secteur as $row){?>
                   <!-- Les noms sont affichés sous forme de liste -->
-                  <option value=<?php echo $row['nom'];?>><?php echo htmlspecialchars($row['nom']);?></option>
+                  <option value=<?php echo htmlspecialchars($row['nom']);?>><?php echo htmlspecialchars($row['nom']);?></option>
                 <?php
                 }
               ?>
         </select><br><br>
         <input type="submit" value="Afficher" />
       </form>
-    </div>
     <?php 
       //On vérifie que le secteur est bien indiqué pour afficher la suite
       if(isset($_GET['secteur'])){
     ?>
+
     <!-- Formulaire permettant d'indiquer la liaison recherché -->
-    <div class ="choix">
+    <div class ="choix col-lg-12 col-md-12 col-sm-12 text-center py-5">
       <form method="get" action="liaison.php">
         <div class="liaison">
         <select name="liaison">
                 <?php
-                echo $_GET['secteur'];
+
                 //Requête récupérant l'id du secteur sélectionné
                 $sql = 'SELECT idSecteur FROM secteur WHERE nom = ?';
                 $stm = $bdd->prepare($sql);
@@ -138,6 +173,7 @@
         <input type="hidden" name="secteur" value="<?php echo htmlspecialchars($_GET['secteur']);?>">
       </form>
     </div>
+
     <?php
      }
 
@@ -169,12 +205,14 @@
 
       $nomPortArr = $donnee[0]['nom'];
     ?>
-      <!-- Tableau listant toutes les traversées d'une liaison à la date donnée -->
-      <div class="table">
+
+
+<!-- Tableau listant toutes les traversées d'une liaison à la date donnée -->
+      <div class="table col-lg-12 col-md-12 col-sm-12 text-center liaison ">
         <?php
           echo "<h2>".$nomPortDep." - ".$nomPortArr."</h2>";
         ?>
-        <table>
+        <table class ="col-lg-12 col-md-12 col-sm-12 text-center py-3">
           <thead>
            <tr>
             <th colspan="3">Traversée</th>
@@ -217,11 +255,29 @@
             ?>
             </tbody>
         </table><br>
-        <center><input type="submit" value="Réserver maintenant"></center>
+        <input class ="text-center" type="submit" value="Réserver maintenant">
         </form>
       </div>
     <?php 
     }
     ?>
-  </body>
+
+    <!-- Footer -->
+        <footer class="py-4 bg-dark fixed-bottom ">
+            <div class="container" >
+            <p class="m-0 text-center text-white small">MarieTEAM présenté par JLF</p>
+            </div>
+        </footer>
+
+  <!-- JS -->
+        <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>        
+        <script type="text/javascript" src="js/SmoothScroll.js"></script>
+        <script type="text/javascript" src="js/jquery.scrollTo.min.js"></script>
+        <script type="text/javascript" src="js/jquery.localScroll.min.js"></script>
+
+</body>
+
 </html>

@@ -1,16 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Marie Team | Profil</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/one-page-wonder.css" rel="stylesheet">
+  <link href="css/footer.css" rel="stylesheet">
+  <link href="profile.css" rel="stylesheet">
     <?php
         session_start();
         session_regenerate_id();
-
-        //On verifie que l'utilisateur est bien connectée à un compte
         if(!isset($_SESSION['username']))
         {
             header("Location: Connexion.php?page=profile");
         }
 
-        //Connexion à la base de donnée
         try{
             $bdd = new PDO('mysql:host=localhost;dbname=marieteam;charset=utf8','root','');
         }
@@ -22,36 +40,48 @@
        <meta charset="utf-8">
        <title>Profile de <?php echo $_SESSION['username']; ?></title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <link rel="stylesheet" href="profile.css" media="screen" type="text/css" />
     </head>
-
-    <!-- Barre de navigation du site marieteam -->
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <a class="navbar-brand" href="index.php">MarieTeam</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-             <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+        <!-- Barre de navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container">
+        <div>
+            <a href="#top" class="logo">
+            <img src="img/logo.png"/>
+            </a>
+        </div>
+        <a class="navbar-brand" href="index.php">MarieTeam</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+
+            <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+            <?php if(!isset($_SESSION['username'])){?>
+                <form class="form-inline my-2 my-lg-0">
+                    <a class="nav-link" href="Connexion.php">Connexion/Inscription<span class="sr-only">(current)</span></a>
+                </form>
+            <?php }
+                else if(isset($_SESSION['username'])){?>
+                <form class="form-inline my-2 my-lg-0">
+                    <a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
+                    <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
+                </form>
+            <?php } ?>
+            </li>
             </ul>
-            <span class="navbar-text">
-              Profil
-            </span>
-          <?php 
-          if(isset($_SESSION['username'])){?>
-            <form class="form-inline my-2 my-lg-0">
-                <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
-            </form>
-      <?php } ?>
-      </div>
+        </div>
+        </div>
     </nav>
-    <?php  
+    <header id="home" class="masthead text-center text-white">
+        <section class="container bg-secondary py-5">
+        <?php 
     //Si on a choisit de voir nos réservations, cela vérifie que la variable est bien attribuée avec le choix reservation
     if(isset($_GET['choix']) && $_GET['choix'] == "reservation"){?>
-        <div id="tableau">
+        <div id="tableau" class="col-lg-12 col-md-12 col-sm-12 text-center py-4">
             <h1>Mes réservations</h1>
-            <table class="table">
+            <table>
                 <thead>
                   <tr>
                     <th>Num.Reservation</th>
@@ -61,7 +91,6 @@
                     <th>Heure Départ</th>
                   </tr>
                 </thead>
-              <tbody>
         <?php  
             //On récupère le code utilisateur du compte 
             $sql = 'SELECT code_uti FROM utilisateur WHERE nom_uti = ?';
@@ -153,71 +182,120 @@
                 }
             }
         else{ ?>
-            <!-- Informations de profil -->
-            <div id="container">
-            <form action="passwordChange.php" method="POST" id="form">
-                <h1>Profil</h1><br>
+                <div id="container">
+                <form action="passwordChange.php" method="POST" id="form">
+                    <h1>Profil</h1><br>
+                        
+                    <label><b>Nom d'utilisateur : <?php echo $_SESSION['username']; ?></b></label><br><br>
 
-                <!-- Affichage du nom d'utilisateur -->
-                <label><b>Nom d'utilisateur : <?php echo $_SESSION['username']; ?></b></label><br><br>
+                    <label><b>Nombre de points de fidélité : </b></label><br>
+                    <?php 
+                        $sql = 'SELECT pt_fid FROM utilisateur WHERE nom_uti = ?';
+                        $stm = $bdd->prepare($sql);
+                        $stm->execute(array($_SESSION['username']));
+                        $result = $stm->fetchAll();
 
-                <!-- Affichage du nombre de points de fidélité -->
-                <label><b>Nombre de points de fidélité : </b></label><br>
-                <?php 
-                    //Requête permettant de récupérer les points de fidélité à partir du nom d'utilisateur
-                    $sql = 'SELECT pt_fid FROM utilisateur WHERE nom_uti = ?';
-                    $stm = $bdd->prepare($sql);
-                    $stm->execute(array($_SESSION['username']));
-                    $result = $stm->fetchAll();
+                        $points = $result[0]['pt_fid'];
+                        echo '<center><p>'.$points.'</p></center>';
+                    ?>
+                    <label><a class="lien" href="profile.php?choix=reservation">Gérer mes réservations</a></label><br>
+                    <label><b>Changer de mot de passe :</b></label><br>
 
-                    $points = $result[0]['pt_fid'];
-                    echo '<center><p>'.$points.'</p></center>';
-                ?>
+                    <label><b>Mot de passe</b></label>
+                    <input type="password" placeholder="Entrer votre mot de passe" name="password" required><br>
 
-                <!-- Voir ses réservations -->
-                <label><a href="profile.php?choix=reservation">Gérer mes réservations</a></label>
+                    <label><b>Nouveau mot de passe</b></label>
+                    <input type="password" placeholder="Entrer à nouveau votre mot de passe" name="newpassword" required><br>
 
-                <!-- Formulaire de changement de mot de passe -->
-                <label><b>Changer de mot de passe :</b></label><br>
+                    <label><b>Confirmer nouveau mot de passe</b></label>
+                    <input type="password" placeholder="Entrer votre nouveau mot de passe" name="verifpassword" required><br>
 
-                <label><b>Mot de passe</b></label>
-                <input type="password" placeholder="Entrer votre mot de passe" name="password" required>
-
-                <label><b>Nouveau mot de passe</b></label>
-                <input type="password" placeholder="Entrer à nouveau votre mot de passe" name="newpassword" required>
-
-                <label><b>Confirmer nouveau mot de passe</b></label>
-                <input type="password" placeholder="Entrer votre nouveau mot de passe" name="verifpassword" required>
-
-                <input type="submit" id='submit' value='Changer'>
-                <?php
-                    //On vérifie que la variable est attribué 
-                    if(isset($_GET['changer'])){
-                        $creer = $_GET['changer'];
-                        //Si créer = 1 alors le mot de passe a été changé
-                        if($creer == 1){
-                            echo "<p>Le mot de passe a été changé avec succès</p>";
+                    <input type="submit" id='submit' value='Changer'><br><br><br>
+                    <?php
+                        if(isset($_GET['changer'])){
+                            $creer = $_GET['changer'];
+                            if($creer == 1){
+                                echo "<p>Le mot de passe a été changé avec succès</p>";
+                            }
                         }
-                    }
-
-                    //Verification en cas d'erreur, si la variable est affecté on verifie
-                    else if(isset($_GET['erreur'])){
-                        $erreur = $_GET['erreur'];
-                        //Si des données ne sont pas fournies
-                        if($erreur == 1){
-                            echo "<p style='color:red'>Veuillez entrer les mot de passes!</p>";
+                        else if(isset($_GET['erreur'])){
+                            $erreur = $_GET['erreur'];
+                            if($erreur == 1){
+                                echo "<p style='color:red'>Veuillez entrer les mot de passes!</p>";
+                            }
+                            else if($erreur == 2){
+                                echo "<p style='color:red'>Le mot de passe indiqué est incorrecte!</p>";
+                            }
+                            else if($erreur == 3){
+                                echo "<p style='color:red'>Les nouveaux mots de passes ne correspondent pas!</p>";
+                            }
                         }
-                        //Si l'ancien mot de passe n'est pas le bon
-                        else if($erreur == 2){
-                            echo "<p style='color:red'>Le mot de passe indiqué est incorrecte!</p>";
-                        }
-                        //Si les nouveaux mot de passes sont différents
-                        else if($erreur == 3){
-                            echo "<p style='color:red'>Les nouveaux mots de passes ne correspondent pas!</p>";
-                        }
-                    }
-                } ?>
+                     ?>
+                </form>
+            </div>
+            <?php if($_SESSION['username'] == "admin"){ ?>
+            <div id="dashboard" class="dashboard">
+            <form action="gestionnaire.php" method="GET">
+                <input type="submit" name="choix" value="AjoutLiaison">
             </form>
-        </div>
-    </body>
+            <form action="gestionnaire.php" method="GET">
+                <input type="submit" name="choix" value="ModifLiaison">
+            </form>
+            <form action="gestionnaire.php" method="GET">
+                <input type="submit" name="choix" value="InfoReservation">
+            </form>
+            <form action="gestionnaire.php" method="GET">
+                <input type="submit" name="choix" value="ReservationPeriode">
+            </form>
+            </div>
+            <?php }
+                if(isset($_POST['choix']) && $_POST['choix'] == 1){
+                    $sql = 'INSERT INTO liaison (code,distance,idPort,idPort_ARRIVEE,idSecteur) VALUES (?,?,?,?,?)';
+                    $stm = $bdd->prepare($sql);
+                    $stm->execute(array($_POST["code"],$_POST["distance"],$_POST["idPort"],$_POST["idPort_ARRIVEE"],$_POST["idSecteur"]));
+                }
+                if(isset($_POST['choix']) && $_POST['choix'] == 2){
+                    $sql = 'UPDATE liaison SET distance = ?, idPort = ?, idPort_ARRIVEE = ?, idSecteur = ? WHERE code = ? ';
+                    $stm = $bdd->prepare($sql);
+                    $stm->execute(array($_POST["distance"],$_POST["idPort"],$_POST["idPort_ARRIVEE"],$_POST["idSecteur"],$_POST["codeLiaison"]));
+                }
+            }?>
+        </table>
+      </section>
+    </header>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark ">
+    <div class="container" >
+      <p class="m-0 text-center text-white small">MarieTEAM présenté par JLF</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- JS -->
+        <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>        
+        <script type="text/javascript" src="js/SmoothScroll.js"></script>
+        <script type="text/javascript" src="js/jquery.scrollTo.min.js"></script>
+        <script type="text/javascript" src="js/jquery.localScroll.min.js"></script>
+        <script type="text/javascript" src="js/jquery.viewport.mini.js"></script>
+        <script type="text/javascript" src="js/jquery.countTo.js"></script>
+        <script type="text/javascript" src="js/jquery.appear.js"></script>
+        <script type="text/javascript" src="js/jquery.sticky.js"></script>
+        <script type="text/javascript" src="js/jquery.parallax-1.1.3.js"></script>
+        <script type="text/javascript" src="js/jquery.fitvids.js"></script>
+        <script type="text/javascript" src="js/owl.carousel.min.js"></script>
+        <script type="text/javascript" src="js/isotope.pkgd.min.js"></script>
+        <script type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>
+        <script type="text/javascript" src="js/jquery.magnific-popup.min.js"></script>
+        <script type="text/javascript" src="js/wow.min.js"></script>
+        <script type="text/javascript" src="js/masonry.pkgd.min.js"></script>
+        <script type="text/javascript" src="js/jquery.simple-text-rotator.min.js"></script>
+        <script type="text/javascript" src="js/jquery.lazyload.min.js"></script>
+        <script type="text/javascript" src="js/all.js"></script>
+
+</body>
+
 </html>

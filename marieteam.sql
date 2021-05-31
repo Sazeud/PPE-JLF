@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : Dim 02 mai 2021 à 13:57
+-- Généré le : mer. 26 mai 2021 à 20:28
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -130,10 +130,21 @@ CREATE TABLE IF NOT EXISTS `enregistrer` (
 --
 
 INSERT INTO `enregistrer` (`numType`, `numReserv`, `quantite`) VALUES
-(1, 17052, 2),
-(1, 54471, 2),
-(2, 54471, 1),
-(4, 54471, 1);
+(1, 5614, 2),
+(1, 10567, 3),
+(1, 10828, 2),
+(1, 19462, 2),
+(1, 58434, 2),
+(1, 74713, 2),
+(3, 5614, 2),
+(3, 10828, 1),
+(3, 19462, 2),
+(3, 58434, 1),
+(4, 58434, 1),
+(4, 74713, 1),
+(5, 19462, 1),
+(7, 10567, 1),
+(7, 10828, 1);
 
 -- --------------------------------------------------------
 
@@ -304,15 +315,19 @@ CREATE TABLE IF NOT EXISTS `reservation` (
   PRIMARY KEY (`numReserv`),
   KEY `RESERVATION_CODE_FK` (`codeuti`),
   KEY `RESERVATION_TRAVERSEE_FK` (`numTrav`)
-) ENGINE=InnoDB AUTO_INCREMENT=54472 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=95025 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `reservation`
 --
 
 INSERT INTO `reservation` (`numReserv`, `nom`, `adr`, `cp`, `ville`, `prix`, `numTrav`, `codeuti`) VALUES
-(17052, 'Petillon', '966 avenue de dunkerque', 59160, 'Lomme', 38, 256, 1),
-(54471, 'Petillon', '966 avenue de dunkerque', 59160, 'Lomme', 141.1, 367, 1);
+(5614, 'Petillon', '966 avenue de dunkerque', 59160, 'Lomme', 50.8, 367, 6),
+(10567, 'Derouck', '952 rue de la madelaine', 59000, 'Lille', 273, 256, 7),
+(10828, 'Thierry', '13 rue des tulipes', 59000, 'Lille', 276.3, 143, 8),
+(19462, 'Derouck', '952 rue de la madelaine', 59000, 'Lille', 183.6, 143, 7),
+(58434, 'Petillon', '966 avenue de dunkerque', 59160, 'Lomme', 135.4, 256, 6),
+(74713, 'Thierry', '13 rue des tulipes', 59000, 'Lille', 117.6, 76, 8);
 
 -- --------------------------------------------------------
 
@@ -334,7 +349,7 @@ CREATE TABLE IF NOT EXISTS `secteur` (
 INSERT INTO `secteur` (`idSecteur`, `nom`) VALUES
 (1, 'Belle-Ile-en-Mer'),
 (2, 'Houat'),
-(3, 'Ile de Groix');
+(3, 'Ile-de-Groix');
 
 -- --------------------------------------------------------
 
@@ -398,6 +413,14 @@ INSERT INTO `tarifer` (`dateDeb`, `code`, `tarif`, `numType`) VALUES
 ('2021-09-16', 15, 199, 6),
 ('2021-09-16', 15, 216, 7),
 ('2021-09-16', 15, 282, 8),
+('2021-09-16', 16, 17.5, 1),
+('2021-09-16', 16, 12.3, 2),
+('2021-09-16', 16, 7.3, 3),
+('2021-09-16', 16, 96, 4),
+('2021-09-16', 16, 134, 5),
+('2021-09-16', 16, 208, 6),
+('2021-09-16', 16, 234, 7),
+('2021-09-16', 16, 295, 8),
 ('2021-09-16', 19, 28.5, 1),
 ('2021-09-16', 19, 18.1, 2),
 ('2021-09-16', 19, 10.2, 3),
@@ -405,7 +428,15 @@ INSERT INTO `tarifer` (`dateDeb`, `code`, `tarif`, `numType`) VALUES
 ('2021-09-16', 19, 203, 5),
 ('2021-09-16', 19, 298, 6),
 ('2021-09-16', 19, 323, 7),
-('2021-09-16', 19, 422, 8);
+('2021-09-16', 19, 422, 8),
+('2021-09-16', 25, 16.8, 1),
+('2021-09-16', 25, 11.5, 2),
+('2021-09-16', 25, 6.1, 3),
+('2021-09-16', 25, 84, 4),
+('2021-09-16', 25, 108, 5),
+('2021-09-16', 25, 185, 6),
+('2021-09-16', 25, 220, 7),
+('2021-09-16', 25, 265, 8);
 
 -- --------------------------------------------------------
 
@@ -433,10 +464,10 @@ CREATE TABLE IF NOT EXISTS `traversee` (
 --
 
 INSERT INTO `traversee` (`numTrav`, `date`, `heure`, `placesA`, `placesB`, `placesC`, `idBateau`, `code`) VALUES
-(76, '2021-11-24', '14:30', 238, 11, 2, 1, 25),
-(143, '2021-11-26', '17:53', 276, 5, 1, 2, 16),
-(256, '2021-11-25', '9:42', 272, 4, 1, 2, 15),
-(367, '2021-11-25', '9:41', 234, 1, 0, 3, 15);
+(76, '2021-11-24', '14:30', 228, 9, 2, 1, 25),
+(143, '2021-11-26', '17:53', 272, 4, 1, 2, 16),
+(256, '2021-11-25', '9:42', 268, 3, 0, 2, 15),
+(367, '2021-11-25', '9:41', 228, 0, 0, 3, 15);
 
 -- --------------------------------------------------------
 
@@ -477,17 +508,20 @@ DROP TABLE IF EXISTS `utilisateur`;
 CREATE TABLE IF NOT EXISTS `utilisateur` (
   `code_uti` int(11) NOT NULL AUTO_INCREMENT,
   `nom_uti` varchar(50) NOT NULL,
-  `mdp_uti` varchar(50) NOT NULL,
+  `mdp_uti` varchar(250) NOT NULL,
   `pt_fid` int(11) NOT NULL,
   PRIMARY KEY (`code_uti`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `utilisateur`
 --
 
 INSERT INTO `utilisateur` (`code_uti`, `nom_uti`, `mdp_uti`, `pt_fid`) VALUES
-(1, 'Sazed', '0103', 9150);
+(6, 'Florian', '$2y$10$ZpcxSS5zO9D0iuNHTWb2COVVQXopiZSTSEURqInsLWDyG92tI5O/a', 475),
+(7, 'Leo', '$2y$10$.gNeWwURkSAdPKANKIo7rejLq7ZoqFFNAEYiP3sGDOnyU/rxruN56', 50),
+(8, 'Julien', '$2y$10$yj7/KoiJ.vIkNXJmcrULlu0U3Iy9HbS5lnJO3af5AXGQt9E6sw5lW', 75),
+(9, 'admin', '$2y$10$nh.ifHrPMYP6hJqw0k/mc.LsFt5HbbPYWt9u8/B7Izal/l7U0HTLG', 0);
 
 --
 -- Contraintes pour les tables déchargées

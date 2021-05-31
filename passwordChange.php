@@ -27,20 +27,25 @@ if(isset($_POST['password']) && isset($_POST['verifpassword']) && isset($_POST['
 	//On vérifie que les données indiqués ne sont pas vides
 	if($password != "" && $verifpassword != "" && $newpassword != ""){
 
-		//Requête permettant de vérifier que le mot de passe indiqués est le bon
-		$requete = $bdd->prepare("SELECT * FROM utilisateur WHERE nom_uti = ? AND mdp_uti = ?");
-		$requete->execute(array($username, $password));
-		$count = $requete->rowCount();
+		//On vérifie si dans la base de donnée il a un utilisateur correspondant aux données indiquées
+		$req = $bdd->prepare('SELECT mdp_uti FROM utilisateur WHERE nom_uti = ?');
+		$req->execute(array($username));
+		$result = $req->fetchAll();
+
+		$password_hash = $result[0]['mdp_uti'];
 
 		//Si la requête nous renvoi une ligne alors c'est que le mot de passe correspond
-		if($count == 1){
+		if(password_verify($password, $password_hash)){
 
 			//Verifie si le nouveau mot de passe et le nouveau mot de passe répété est le même
 			if($newpassword == $verifpassword){
 
+				//Hash de mot de passe
+				$newpassword_hash = password_hash($newpassword, PASSWORD_DEFAULT);
+
 				//Requête permettant de modifier le mot de passe de l'utilisateur
 				$requete = $bdd->prepare('UPDATE utilisateur SET mdp_uti = ? WHERE nom_uti = ?');
-				$requete->execute(array($newpassword, $username));
+				$requete->execute(array($newpassword_hash, $username));
 
 				//Renvoi sur la page de profile avec un message de validation de changement de mot de passe
 				header("Location: profile.php?changer=1");

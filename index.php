@@ -1,11 +1,29 @@
-<!DOCTYPE html> 
-  <head> 
-  	<meta charset="UTF-8">
-    <title>Marie Team | Page d'accueil</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  </head> 
-  <body> 
-    <?php
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Marie Team | Page d'accueil</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/one-page-wonder.css" rel="stylesheet">
+
+</head>
+
+<body>
+  <?php
     session_start();
     session_regenerate_id();
     //Connexion à la base de donnée
@@ -18,45 +36,101 @@
 
     ?>
 
-    <!-- Barre de navigation du site MarieTeam -->
-  	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	  <a class="navbar-brand" href="index.php">MarieTeam</a>
-	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-	    <span class="navbar-toggler-icon"></span>
-	  </button>
-	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-	    <ul class="navbar-nav mr-auto">
-	    </ul>
-	    <span class="navbar-text">
-	      Page d'Accueil
-	    </span>
-      <?php if(!isset($_SESSION['username'])){?>
-	    <form class="form-inline my-2 my-lg-0">
-	      <a class="nav-link" href="Connexion.php">Connexion/Inscription<span class="sr-only">(current)</span></a>
-	    </form>
-      <?php }
-      else if(isset($_SESSION['username'])){?>
-        <form class="form-inline my-2 my-lg-0">
-          <a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
-          <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
-        </form>
-      <?php } ?>
-	  </div>
-	</nav>
-	<br><br><br><br>
+  <!-- Barre de navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+      <div>
+        <a href="#top" class="logo">
+          <img src="img/logo.png"/>
+        </a>
+      </div>
+      <a class="navbar-brand" href="index.php">MarieTeam</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
 
-  
-	<div class="container">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+          <?php if(!isset($_SESSION['username'])){?>
+              <form class="form-inline my-2 my-lg-0">
+                <a class="nav-link" href="Connexion.php">Connexion/Inscription<span class="sr-only">(current)</span></a>
+              </form>
+          <?php }
+            else if(isset($_SESSION['username'])){?>
+              <form class="form-inline my-2 my-lg-0">
+                <a class="nav-link" href="profile.php"><?php echo $_SESSION['username']; ?></a>
+                <a class="nav-link" href="Deconnexion.php">Deconnexion<span class="sr-only">(current)</span></a>
+              </form>
+          <?php } ?>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header id="home" class="masthead text-center text-white">
+    <div class="masthead-content">
+      <div class="container">
+        <h1 class="masthead-heading mb-0">MarieTeam</h1>
+        <h2 class="masthead-subheading mb-0">Trouvez la croisière de vos rèves !</h2>
+
+        <!-- Scroll Down -->
+                        <div class="local-scroll ">
+                            <a href="#traversee" class="scroll-down btn btn-primary btn-xl rounded-pill mt-5"><span>Voir les traversées</span></a>
+                        </div>
+        <!-- End Scroll Down -->
+      </div>
+    </div>
+  </header>
+
+  <section id="traversee">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 order-lg-2">
+          <div class="p-5">
+            <img class="img-fluid rounded-circle" src="img/bateau1.webp" alt="">
+          </div>
+        </div>
+        <div class="col-lg-6 order-lg-1">
+          <div class="p-5">
+            <h2 class="display-5">Pour une expérience inoubliable...</h2>
+            <p>Nos bateaux de croisière sont équipés de nombreux services: restaurant, piscine, toboggan, animations, salon de massage, salle de sport, bars, salle de jeu etc...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="p-5">
+            <img class="img-fluid rounded-circle" src="img/famille1.jpg" alt="">
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="p-5">
+            <h2 class="display-5">Créez des souvenirs marquants</h2>
+            <p>Emmenez votre famille vivre une aventure unique en son genre.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container col-lg-6 col-md-4 text-center liaison"  id="tab">
       <h1>Tableaux des prochaines traversées</h1>
       <!-- Formulaire permettant de voir les liaisons partant du port de départ indiqué -->
       <p>Veuillez entrer un port de départ afin de voir les prochaines traversées disponibles :</p>
-      <form action="index.php" method="GET">
+      <form action="index.php#tab" method="GET">
         <label><b>Liaison :</b></label> 
         <input type="text" name="port">
         <input type="submit" id='submit' value='Rechercher'>
       </form>
 
-      <?php 
+  <?php 
       //Cela ne s'affiche que si le port de départ est indiqué
       if(isset($_GET['port'])){
 
@@ -156,5 +230,40 @@
         }
       }
       ?>
-  </body> 
+    </div>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark ">
+    <div class="container" >
+      <p class="m-0 text-center text-white small">MarieTEAM présenté par JLF</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- JS -->
+        <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>        
+        <script type="text/javascript" src="js/SmoothScroll.js"></script>
+        <script type="text/javascript" src="js/jquery.scrollTo.min.js"></script>
+        <script type="text/javascript" src="js/jquery.localScroll.min.js"></script>
+        <script type="text/javascript" src="js/jquery.viewport.mini.js"></script>
+        <script type="text/javascript" src="js/jquery.countTo.js"></script>
+        <script type="text/javascript" src="js/jquery.appear.js"></script>
+        <script type="text/javascript" src="js/jquery.sticky.js"></script>
+        <script type="text/javascript" src="js/jquery.parallax-1.1.3.js"></script>
+        <script type="text/javascript" src="js/jquery.fitvids.js"></script>
+        <script type="text/javascript" src="js/owl.carousel.min.js"></script>
+        <script type="text/javascript" src="js/isotope.pkgd.min.js"></script>
+        <script type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>
+        <script type="text/javascript" src="js/jquery.magnific-popup.min.js"></script>
+        <script type="text/javascript" src="js/wow.min.js"></script>
+        <script type="text/javascript" src="js/masonry.pkgd.min.js"></script>
+        <script type="text/javascript" src="js/jquery.simple-text-rotator.min.js"></script>
+        <script type="text/javascript" src="js/jquery.lazyload.min.js"></script>
+        <script type="text/javascript" src="js/all.js"></script>
+
+</body>
+
 </html>
